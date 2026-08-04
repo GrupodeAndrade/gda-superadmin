@@ -1,0 +1,38 @@
+<?php
+use App\Controllers\AuthController;
+use App\Controllers\ClientController;
+use App\Controllers\DashboardController;
+use App\Controllers\LogController;
+use App\Controllers\ProjectController;
+use App\Controllers\SettingsController;
+use App\Controllers\UpdateController;
+
+$router->get('/', fn()=>redirect(App\Services\Auth::check()?'dashboard':'login'), false);
+$router->get('/login',[AuthController::class,'show'],false);
+$router->post('/login',[AuthController::class,'login'],false);
+$router->post('/logout',[AuthController::class,'logout']);
+$router->get('/dashboard',[DashboardController::class,'index']);
+$router->get('/clientes',[ClientController::class,'index']);
+$router->get('/clientes/novo',[ClientController::class,'create']);
+$router->post('/clientes',[ClientController::class,'store']);
+$router->get('/clientes/{id}',[ClientController::class,'show']);
+$router->get('/clientes/{id}/editar',[ClientController::class,'edit']);
+$router->post('/clientes/{id}',[ClientController::class,'update']);
+$router->post('/clientes/{id}/status',[ClientController::class,'toggle']);
+$router->get('/clientes/{id}/projetos',[ClientController::class,'projects']);
+$router->get('/projetos',[ProjectController::class,'index']);
+$router->get('/projetos/{id}',[ProjectController::class,'show']);
+$router->get('/projetos/{id}/editar',[ProjectController::class,'edit']);
+$router->post('/projetos/{id}',[ProjectController::class,'update']);
+$router->post('/projetos/{id}/status',[ProjectController::class,'toggle']);
+$router->get('/projetos/{id}/clientes',[ProjectController::class,'clients']);
+$router->get('/atualizacoes',[UpdateController::class,'index']);
+$router->post('/atualizacoes/analisar',[UpdateController::class,'analyze']);
+$router->post('/atualizacoes/instalar',[UpdateController::class,'install']);
+$router->get('/atualizacoes/historico',[UpdateController::class,'index']);
+$router->get('/logs',[LogController::class,'index']);
+$router->get('/configuracoes',[SettingsController::class,'index']);
+$router->post('/configuracoes',[SettingsController::class,'update']);
+$router->get('/perfil',[SettingsController::class,'profile']);
+$router->post('/perfil',[SettingsController::class,'updateProfile']);
+

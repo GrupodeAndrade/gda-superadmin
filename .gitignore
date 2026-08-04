@@ -1,0 +1,10 @@
+/config/local.php
+/storage/backups/*
+/storage/cache/*
+/storage/logs/*
+/storage/temp/*
+/storage/updates/*
+/dist/*
+!/storage/**/.gitkeep
+!/dist/.gitkeep
+

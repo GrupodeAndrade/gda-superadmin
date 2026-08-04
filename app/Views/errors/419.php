@@ -1,0 +1,1 @@
+<?php $title='Sessão expirada'; ?><section class="error-page"><strong>419</strong><h1>Sessão expirada</h1><p>Recarregue a página e tente novamente.</p><a class="btn primary" href="<?= e(base_url('dashboard')) ?>">Continuar</a></section>

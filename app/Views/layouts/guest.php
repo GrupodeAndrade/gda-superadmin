@@ -1,0 +1,2 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title><?= e($title??'GDA Plataforma') ?></title><link rel="stylesheet" href="<?= e(base_url('assets/css/app.css')) ?>"></head><body class="auth-page">
+<?= $content ?><script src="<?= e(base_url('assets/js/app.js')) ?>"></script></body></html>

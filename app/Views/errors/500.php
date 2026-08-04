@@ -1,0 +1,2 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Erro interno</title></head><body><main style="font-family:sans-serif;max-width:600px;margin:10vh auto;padding:30px"><h1>Não foi possível concluir</h1><p>Ocorreu um erro interno. Tente novamente; se persistir, consulte o log do sistema.</p><a href="./">Voltar</a></main></body></html>
+

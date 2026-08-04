@@ -1,0 +1,16 @@
+Options -Indexes
+RewriteEngine On
+
+RewriteRule (^|/)\.(?!well-known/) - [F,L]
+RewriteRule ^(?:app|bootstrap|config|database|routes|storage|tests)(?:/|$) - [F,L,NC]
+RewriteRule ^(?:README\.md|version\.json)$ - [F,L,NC]
+RewriteRule ^public/(.*)$ $1 [R=301,L]
+RewriteRule ^assets/(.*)$ public/assets/$1 [L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+<FilesMatch "(^\.|\.sql$|\.log$|\.ini$|\.json$|\.lock$|\.bak$)">
+  Require all denied
+</FilesMatch>

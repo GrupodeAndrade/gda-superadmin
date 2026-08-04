@@ -1,0 +1,13 @@
+<?php $editing=isset($client);$title=$editing?'Editar cliente':'Novo cliente';$selected=$selected??[]; ?>
+<section class="page-head"><div><h1><?= e($title) ?></h1><p><?= $editing?'Atualize os dados e acessos do cliente.':'Crie a conta administrativa principal do cliente.' ?></p></div></section>
+<form class="panel form-grid" method="post" action="<?= e(base_url($editing?'clientes/'.$client['id']:'clientes')) ?>" data-loading><?= csrf_field() ?>
+<label>Nome da empresa ou cliente *<input name="name" value="<?= old('name',$client['name']??'') ?>" required></label>
+<?php if(!$editing): ?><label>Identificador *<input name="identifier" value="<?= old('identifier') ?>" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="empresa-exemplo" required></label><?php else: ?><label>Identificador<input value="<?= e($client['identifier']) ?>" disabled></label><?php endif; ?>
+<label>Nome da pessoa administradora *<input name="administrator_name" value="<?= old('administrator_name',$client['administrator_name']??'') ?>" required></label>
+<label>E-mail de acesso *<input type="email" name="email" value="<?= old('email',$client['email']??'') ?>" required></label>
+<label>Telefone<input name="phone" data-phone value="<?= old('phone',$client['phone']??'') ?>" placeholder="(00) 00000-0000"></label>
+<label>Status *<select name="status"><option value="active" <?= ($client['status']??'active')==='active'?'selected':'' ?>>Ativo</option><option value="inactive" <?= ($client['status']??'')==='inactive'?'selected':'' ?>>Inativo</option></select></label>
+<?php if(!$editing): ?><label>Senha provisória *<div class="password-wrap"><input type="password" name="password" minlength="8" required><button type="button" data-password-toggle>Mostrar</button></div></label><label>Confirmar senha *<input type="password" name="password_confirmation" minlength="8" required></label><?php endif; ?>
+<label class="full">Observações internas<textarea name="notes" rows="4"><?= old('notes',$client['notes']??'') ?></textarea></label>
+<fieldset class="full"><legend>Projetos liberados</legend><div class="checks"><?php if(!$projects): ?><p>Nenhum projeto disponível.</p><?php endif; ?><?php foreach($projects as $p): ?><label class="check-card"><input type="checkbox" name="projects[]" value="<?= (int)$p['id'] ?>" <?= in_array($p['id'],$selected,true)?'checked':'' ?> <?= $p['status']==='inactive'?'disabled':'' ?>><span><b><?= e($p['name']) ?></b><small>v<?= e($p['version']) ?> • <?= e(project_status_label($p['status'])) ?></small></span></label><?php endforeach; ?></div></fieldset>
+<div class="form-actions full"><a class="btn" href="<?= e(base_url('clientes')) ?>">Cancelar</a><button class="btn primary" type="submit">Salvar cliente</button></div></form>

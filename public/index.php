@@ -1,0 +1,26 @@
+<?php
+declare(strict_types=1);
+
+$context = require dirname(__DIR__) . '/bootstrap/app.php';
+require dirname(__DIR__) . '/app/Helpers/helpers.php';
+
+if (empty($context['local']['installed'])) {
+    require dirname(__DIR__) . '/install/index.php';
+    exit;
+}
+
+if (is_file(dirname(__DIR__) . '/storage/maintenance.lock')) {
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    if (!str_contains($path, '/atualizacoes')) {
+        http_response_code(503);
+        header('Retry-After: 300');
+        require dirname(__DIR__) . '/app/Views/errors/maintenance.php';
+        exit;
+    }
+}
+
+App\Services\ModuleMigrationService::run();
+
+$router = new App\Services\Router();
+require dirname(__DIR__) . '/routes/web.php';
+$router->dispatch();

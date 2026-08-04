@@ -1,0 +1,1 @@
+<?php $title='Acesso negado'; ?><section class="error-page"><strong>403</strong><h1>Acesso negado</h1><p>Você não tem permissão para acessar esta página.</p><a class="btn primary" href="<?= e(base_url('dashboard')) ?>">Voltar ao início</a></section>

@@ -1,0 +1,562 @@
+﻿{
+    "schema":  "gda-base-import/v1",
+    "generated_at":  "2026-08-01T16:24:45.2935938Z",
+    "source_directory":  "D:\\Documents\\Sistema de caixa",
+    "source_archive":  "Caixa-Diario-v0.99-Source.zip",
+    "source_archive_sha256":  "ace9591ee099f0d096b175076ca771b52c74a8d46b4d82afde4b8867831fa826",
+    "destination":  "D:\\Documents\\GDA Plataforma\\modulos\\gda-caixas",
+    "imported_file_count":  110,
+    "imported_total_bytes":  380684,
+    "files":  [
+                  {
+                      "path":  ".htaccess",
+                      "size":  507,
+                      "sha256":  "0aba030c062a19bf48833324a83ac25a127d203018fc0fab2ba309c02f15529d"
+                  },
+                  {
+                      "path":  "admin-gda/.htaccess",
+                      "size":  200,
+                      "sha256":  "09ebaaf05b586e61bab4ea20ad350978382e9e0f689879af139411582e559c22"
+                  },
+                  {
+                      "path":  "admin-gda/assets/global.css",
+                      "size":  1935,
+                      "sha256":  "e4bd4c468f1d347e6dc1360e92e9b4ed619cd1ba35522466cead8ee99dc9e0a1"
+                  },
+                  {
+                      "path":  "admin-gda/index.php",
+                      "size":  4288,
+                      "sha256":  "099744dd100010c6fd278962a4358d0ceac8d327138cb20f1a20ea6024f8e126"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Controllers/GlobalAdminController.php",
+                      "size":  6154,
+                      "sha256":  "1efb97ca42623cef2721587cef46887658d51c318152d71a193c78b7e41988c6"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/GlobalAdministrationPolicy.php",
+                      "size":  674,
+                      "sha256":  "e260ae31aeeb8aa6ff113508b9bbd0dcc4bc30534e56e369e100d12c16f7dd17"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Http/GlobalRouter.php",
+                      "size":  697,
+                      "sha256":  "92b8323e7bdcc10e69e171cdb3fd360e29d8cb8bb820257b935378f3a4348c46"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/README.md",
+                      "size":  252,
+                      "sha256":  "44a9c4b7c7f1127e1476e114a6f6f1f3f946a5c16c87254d20cbd8fbd8c72a79"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Repositories/GlobalAdministrationRepository.php",
+                      "size":  3929,
+                      "sha256":  "d4363cb8c7e6b5b0fbdaee87c7c6128e4c890f73b4d885ce6f286cf4e7c566cf"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Repositories/GlobalAuditRepository.php",
+                      "size":  1024,
+                      "sha256":  "d7aed080b2b195e9aec2e3495fd5d788343821b0b3da8d049531048781b8dcba"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Repositories/GlobalUserRepository.php",
+                      "size":  1393,
+                      "sha256":  "dad52ab21deace293a4fd1fe73f5ea272caa8b452c099f084531952e51e6552c"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Services/DiagnosticService.php",
+                      "size":  1721,
+                      "sha256":  "0bc3facb901b43815253caea11573df25b80af9be9d3aa3b01a33198bae28aaf"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Services/GlobalActivationService.php",
+                      "size":  980,
+                      "sha256":  "c58fb195560ac161f8f6e78633ceff75d86a096baa305ca346f01b92c19c06ac"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Services/GlobalAuthService.php",
+                      "size":  1003,
+                      "sha256":  "d2901a264bf441e241450cc8233ea45e87bb5d3d2b28b224c2dd4de95e669c07"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Services/GlobalUpdateService.php",
+                      "size":  1237,
+                      "sha256":  "64f5d2126f0312650601d195a71c1ac4e52f29e4dca45167cb9dcf7baa214754"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/activate.php",
+                      "size":  666,
+                      "sha256":  "9e791cdcc87385098edce25d82004ef692c1d14afc74425cf823f6b0118adbe9"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/activities.php",
+                      "size":  83,
+                      "sha256":  "301f742f05eb3444ad10db43b6822ac4c6d0df071843a6a9ad96e123da02e7e3"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/client-detail.php",
+                      "size":  978,
+                      "sha256":  "aa87119f90b37a8388f8726b63cde3df89a2183a60c79fe884bba9f126a274dd"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/clients.php",
+                      "size":  1378,
+                      "sha256":  "b965d3fc0dd5c392f2b01d2e32074956e1deae49a742b2d1f995f762e8cb2841"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/cycles.php",
+                      "size":  600,
+                      "sha256":  "47f0c8f3640e7e886350a9a520b8c44b6e7136a70c09691c4cd2b59a2601dede"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/dashboard.php",
+                      "size":  654,
+                      "sha256":  "b2bc003c13f09d2e9479ad0e345be22bea197fc2e33c7a67a3c9600f8e808751"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/diagnostics.php",
+                      "size":  346,
+                      "sha256":  "11a5346faf1bce983dd69f084c4b7758fa47ae6c3fbc2024d08b9cf59797ca36"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/footer.php",
+                      "size":  22,
+                      "sha256":  "c29b8b0da0ea514e63e3cd6844b09e324c1fd79a319c62ab0d9e2965f5508fb3"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/GlobalView.php",
+                      "size":  437,
+                      "sha256":  "ab8b6be21d0cf2719a4ab4d778614d4c495cff5b96afbcfae686fb052daf5d95"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/header.php",
+                      "size":  1412,
+                      "sha256":  "eb6672fb9c0fd7085f943309a38795db201d73e873a20038a8f5c4dac885cb60"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/login.php",
+                      "size":  506,
+                      "sha256":  "3c62288d44fbbb5967afadecae752e92216233e99d2ca646096922d8f141ad18"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/partials/activity-table.php",
+                      "size":  452,
+                      "sha256":  "086afceb71f6d7352b7341a8edf44aa407270ad7e082583192684b9549e2d8e3"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/settings.php",
+                      "size":  568,
+                      "sha256":  "0b2237780231c92141da82fb8416ee09de3f4376820aa910e0faf033ad28a372"
+                  },
+                  {
+                      "path":  "app/AdminGlobal/Views/updates.php",
+                      "size":  1179,
+                      "sha256":  "7694708f21bd5b019358fc6094491d35bfb79abb2cae66284b6465610ff17dd1"
+                  },
+                  {
+                      "path":  "app/autoload.php",
+                      "size":  364,
+                      "sha256":  "551637810e32c228b6058381a3068fddaa679c78372668396a18997d178b6db4"
+                  },
+                  {
+                      "path":  "app/bootstrap.php",
+                      "size":  26335,
+                      "sha256":  "210913cbbe75cb65340b9b5dea157d6aa2b5926bbac9587b552266ef49478275"
+                  },
+                  {
+                      "path":  "app/ClientArea/ClientContext.php",
+                      "size":  677,
+                      "sha256":  "c09cdb8fa92d863f7279fda0b71f2f81029092626fd4541c6f3a5b5ebce9cd18"
+                  },
+                  {
+                      "path":  "app/ClientArea/README.md",
+                      "size":  296,
+                      "sha256":  "b40ad30dce6d0806a7f6331c59d5926a1dcbb0b4c8d7619735640a188929af6f"
+                  },
+                  {
+                      "path":  "app/Core/Auth/AuthService.php",
+                      "size":  1058,
+                      "sha256":  "41725fa7992aefb356b99db2c81dd218126e1ae8cdc5964fa61b8a0b7b71ce5b"
+                  },
+                  {
+                      "path":  "app/Core/Auth/PermissionService.php",
+                      "size":  707,
+                      "sha256":  "48added339a9ae8e99a156859084a96e15dfa5314e2b55f1ecb9385925e17240"
+                  },
+                  {
+                      "path":  "app/Core/Auth/RoleService.php",
+                      "size":  380,
+                      "sha256":  "279e88b2dd6c3112eebc17d7c2150173d6eeb91d131b0f9f5164a6f9904de326"
+                  },
+                  {
+                      "path":  "app/Core/Database/Connection.php",
+                      "size":  680,
+                      "sha256":  "d77e5cbdb8e59467e470c1f123849fd6896dead2acd1f373b49cf0d88a3505f7"
+                  },
+                  {
+                      "path":  "app/Core/Database/MigrationRunner.php",
+                      "size":  3155,
+                      "sha256":  "9daab6c8effa537753a1f0734c544d40a36ff987129de48b37d1d2bfabd0eace"
+                  },
+                  {
+                      "path":  "app/Core/Http/RequireClientContextMiddleware.php",
+                      "size":  1151,
+                      "sha256":  "1f51d72e4ee965f019eea2180e54faf566f78b9e6876db133dfe975a32c08068"
+                  },
+                  {
+                      "path":  "app/Core/Http/RequireGlobalAdminMiddleware.php",
+                      "size":  570,
+                      "sha256":  "fe9f1d12f57dbc9f9800517fbfe7ee32d5b4c3a12da44db58ac8046afb5910b9"
+                  },
+                  {
+                      "path":  "app/Core/Http/Router.php",
+                      "size":  863,
+                      "sha256":  "b26b14c72aadc1ac51dff47d4bf32f48ba40f4cbc7c5ab8bf1b5e8fef64608f6"
+                  },
+                  {
+                      "path":  "app/Core/Http/SecurityHeadersMiddleware.php",
+                      "size":  392,
+                      "sha256":  "fd91348735cf43389f254d5ddd76613d4a4d6ec53d7941947f383c59d90e3473"
+                  },
+                  {
+                      "path":  "app/Core/Security/CsrfService.php",
+                      "size":  422,
+                      "sha256":  "f99f2a9661b5c7c93913c0afff490ac3eb80af20cfe7b6b679ec0ba849da9d67"
+                  },
+                  {
+                      "path":  "app/Core/Security/SessionManager.php",
+                      "size":  1428,
+                      "sha256":  "d5ffd847b69c5b157e17d1e110eb21952d349afc1bb18dd9cbfa936a88aa1322"
+                  },
+                  {
+                      "path":  "app/Infrastructure/Installer/README.md",
+                      "size":  316,
+                      "sha256":  "ea7d3b124b87739ebfb5cc650d2e31a95cc1c1e63068c853b72af202e7bf9676"
+                  },
+                  {
+                      "path":  "app/layout.php",
+                      "size":  2200,
+                      "sha256":  "f80421a92f0e86e2d3b51f0cb93b03ed6e6cacd44905f597e90912676c5d3911"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Controllers/.gitkeep",
+                      "size":  1,
+                      "sha256":  "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Models/.gitkeep",
+                      "size":  1,
+                      "sha256":  "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Models/Cycle.php",
+                      "size":  794,
+                      "sha256":  "1154132a6f79ae9a39493195510046c6a17bb50947a7a13698deb0a0bc768716"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Models/Participant.php",
+                      "size":  392,
+                      "sha256":  "3371f8de17f8ecc8812d82ad1eb32a34fa936d0dd8253063a0df3049cb7da2c5"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Policies/.gitkeep",
+                      "size":  1,
+                      "sha256":  "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Policies/ClientAdministrationPolicy.php",
+                      "size":  545,
+                      "sha256":  "b58d5d47e5e8bf4e0f2df577fede590147651a3cdaa405a44e276bf0a6d50d68"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Repositories/ContributionRepository.php",
+                      "size":  828,
+                      "sha256":  "0d598607d9be5310c1570b6580662a6944d5de3b69c9627950de96e941399d97"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Repositories/CycleRepository.php",
+                      "size":  2906,
+                      "sha256":  "3f6bee0f6c00f71762f2980ccd829ef877ea126bc660f99f913afcd18a289ee5"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Repositories/ParticipantRepository.php",
+                      "size":  921,
+                      "sha256":  "d16445fb65d4e9e5dca1f99d13c6d38e5eda64004e1e5c91eefcdb1e55a6fcaa"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Repositories/UserRepository.php",
+                      "size":  521,
+                      "sha256":  "b29f0ad892775d0cd61ef3dfdfbd59298516ac9845aff81c3c17e5b2f1520a07"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/BackupService.php",
+                      "size":  463,
+                      "sha256":  "31a33b197aac294d7d815c2b3f12a0d415b776ecb7c82081808f9e672e5f4496"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/ClientAdministratorService.php",
+                      "size":  4235,
+                      "sha256":  "c7a4223830025cc5148ab2778900136ef48de7960ee94a96c035fc70df0b65cc"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/ContributionService.php",
+                      "size":  407,
+                      "sha256":  "16258f40bbbfd58425391564da064fedf276171a74e419907a42751463c75c52"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/CycleManagementService.php",
+                      "size":  2501,
+                      "sha256":  "1c32bf1691bbe0ecc81d8f7428baa1907d6549dced0a48bb6ca681fc5a40c85f"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/CycleService.php",
+                      "size":  1612,
+                      "sha256":  "c3abc95787abaa239bd3306a0a507c0da07a2a10b237bc0ced699cb328f36148"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/MessageService.php",
+                      "size":  570,
+                      "sha256":  "30394cf437d88013dcc2a64d550dafdfe29777630185afff27542c579ddafa57"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/ParticipantAccessService.php",
+                      "size":  3512,
+                      "sha256":  "846a6bcf01b9545a1b10be546111c4c8cc97ecfefb3c5c8886c557ad2029cddb"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/ParticipantService.php",
+                      "size":  298,
+                      "sha256":  "cb8e48e505211c2636160d067ca9793419d725218c2b4ce35898ac1bcf9957e1"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/SettingsService.php",
+                      "size":  1066,
+                      "sha256":  "e577c841f0481651a9ca281131ba5629a5d2e4880916d63c3c865b46fe787058"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Services/UpdateService.php",
+                      "size":  630,
+                      "sha256":  "0550d669bb3db95f97f87c78c5efb81796d37653d8aefbe4fdaf3de82f09f883"
+                  },
+                  {
+                      "path":  "app/Modules/CaixaDiario/Views/.gitkeep",
+                      "size":  1,
+                      "sha256":  "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+                  },
+                  {
+                      "path":  "app/pages.php",
+                      "size":  119604,
+                      "sha256":  "10b3ce8aa691030c0d47b59f2c5001043d982fd17cc504c522d8e4f2d6eb222d"
+                  },
+                  {
+                      "path":  "app/updater.php",
+                      "size":  16840,
+                      "sha256":  "c318fd01964e23926464566d41b438a71704a1d7f4a65bbabad35ffefbeac60a"
+                  },
+                  {
+                      "path":  "ATUALIZACAO-MANUAL-v0.13.1.md",
+                      "size":  2091,
+                      "sha256":  "ced7750c54271116b0b3a9d1b6e2541145bfb4e015dd2a9ac2dd4a94c54983a7"
+                  },
+                  {
+                      "path":  "ATUALIZACAO-v0.13.0.md",
+                      "size":  2018,
+                      "sha256":  "ae87c350d9464825225c68de1099437eb2e70cf994fdfb90b78721ff275f6b9e"
+                  },
+                  {
+                      "path":  "CHANGELOG.md",
+                      "size":  2971,
+                      "sha256":  "03f8c7e014ac11e42d35f677c783218560f7ced0e7d88a10d121827c9128f75d"
+                  },
+                  {
+                      "path":  "config/.htaccess",
+                      "size":  75,
+                      "sha256":  "6dbd18ca4d7b1986a1d3008987f17d8c574e5ffea99ebb5737157cbe29f1b452"
+                  },
+                  {
+                      "path":  "config/config.php",
+                      "size":  608,
+                      "sha256":  "92123f6393b2c67453843507a1a1057005ed79b41e8552e00a41bcb418827645"
+                  },
+                  {
+                      "path":  "config/local.example.php",
+                      "size":  620,
+                      "sha256":  "7eae132bdc5390f901858285c9325a4bffeffc9f8d1c46bc05e12c164cb725b0"
+                  },
+                  {
+                      "path":  "database/install.php",
+                      "size":  4001,
+                      "sha256":  "763523560ada416ac7fa877a33a321259ebd4f36893371fce86a04ca8ac06d3f"
+                  },
+                  {
+                      "path":  "database/migrations/001_updater_infrastructure.php",
+                      "size":  746,
+                      "sha256":  "4f3818928d717191887e1e880b5c9e641a4cf0705cae19815ad0c33a832221ef"
+                  },
+                  {
+                      "path":  "database/migrations/002_client_roles.php",
+                      "size":  414,
+                      "sha256":  "7a986b23227404b056d31afc9bf3836143ac66ca7f2324cd96592e59b5460884"
+                  },
+                  {
+                      "path":  "database/migrations/003_multi_tenant_foundation.php",
+                      "size":  7289,
+                      "sha256":  "2a5216a89bef7c61a07f2df3d599183aae1a3914d1d3107818e0ff6cdb1470f3"
+                  },
+                  {
+                      "path":  "database/migrations/004_global_administration.php",
+                      "size":  1879,
+                      "sha256":  "2d3c89bb79a07dee7372aa5f3dab8224129b5a1103f417e3cc694996dffcb4ef"
+                  },
+                  {
+                      "path":  "database/migrations/005_multi_cycle_management.php",
+                      "size":  1069,
+                      "sha256":  "a976205e601b75e86e3d8577c943fbbafbc6e002e1c5929214d472d89f6cdeb9"
+                  },
+                  {
+                      "path":  "database/migrations/006_participant_access_links.php",
+                      "size":  1940,
+                      "sha256":  "7a0751f219e81b2e168d51c216adf09ed259bb2d300111435e5860840f90f585"
+                  },
+                  {
+                      "path":  "database/schema.sql",
+                      "size":  6883,
+                      "sha256":  "11dfa11e5fbb999b309e7bb863cf5c31b0480e90b45e16b3c8e8d978fce0a96e"
+                  },
+                  {
+                      "path":  "docs/ARCHITECTURE.md",
+                      "size":  4866,
+                      "sha256":  "312a85dab33b58dfb9d0927e3adc33fe55d44ebbd353bf32aeae2f8ce36dfe7f"
+                  },
+                  {
+                      "path":  "docs/HOTFIX-0.12.1.md",
+                      "size":  729,
+                      "sha256":  "2e34efbde086d2f5429b34092601957fe21ad278631eb9655771d631e7a96c30"
+                  },
+                  {
+                      "path":  "docs/PHASE-1-AUDIT.md",
+                      "size":  1800,
+                      "sha256":  "9f30ca524e23a2151f89dba284cfaf491d72b46b7798dd7a45163a213c21b953"
+                  },
+                  {
+                      "path":  "docs/PHASE-2A1-MARIADB-HOMOLOGATION.md",
+                      "size":  3659,
+                      "sha256":  "d1907093059df2ae717427a93b45f86c4cebd7187673cd51f7a20c5046001e38"
+                  },
+                  {
+                      "path":  "docs/PHASE-2A-MULTI-TENANCY.md",
+                      "size":  4196,
+                      "sha256":  "0c518cf9a6eb10959e77a3a52c3ee8c48ccd828994ecf8dba91ce901b1e06bb3"
+                  },
+                  {
+                      "path":  "docs/PHASE-2B-GLOBAL-ADMINISTRATION.md",
+                      "size":  4759,
+                      "sha256":  "05fee11ab1db44f4ccf22aa4167b535673f8a2df9f38af645ede1abcae022218"
+                  },
+                  {
+                      "path":  "docs/PHASE-2D-MULTI-CAIXA.md",
+                      "size":  2779,
+                      "sha256":  "a069d9922d7e24f93ca3bd350eb4aa5bb348327a648218374c68f5cdb0fac6f4"
+                  },
+                  {
+                      "path":  "docs/PHASE-2E-PARTICIPANT-ACCESS.md",
+                      "size":  1682,
+                      "sha256":  "c263d3ce148127a7b2fa20bf9a04d1a8bd2cce5a089115a2525be93a22c99aff"
+                  },
+                  {
+                      "path":  "docs/PHASE-2F-UPDATER-MIGRATIONS.md",
+                      "size":  2336,
+                      "sha256":  "aed345513bae5f339c25bb9a4d8e9c94263308a835b92880f5676c47b1fa8d74"
+                  },
+                  {
+                      "path":  "docs/TEMPORARY-MULTI-ADMIN.md",
+                      "size":  1422,
+                      "sha256":  "798f7420c72ba0ae1a988164475fa8872d4524853a90f54fbc0e4339cdab5912"
+                  },
+                  {
+                      "path":  "IMPLANTACAO-HOMOLOGACAO.md",
+                      "size":  2703,
+                      "sha256":  "3087325eaeb2c1c52bbf694bab169fcc8930026541aa17e51a54684c61a50260"
+                  },
+                  {
+                      "path":  "index.php",
+                      "size":  6517,
+                      "sha256":  "1092426b21a2f2550340eab8701fb2ea8b90479d71ba77cc0c296b4b088411b4"
+                  },
+                  {
+                      "path":  "public/assets/app.js",
+                      "size":  11650,
+                      "sha256":  "d1dadeffcd88f56f4e56b6c03a48f80b29f0eaac6188e30a15a2b5cf04df65e1"
+                  },
+                  {
+                      "path":  "public/assets/style.css",
+                      "size":  25639,
+                      "sha256":  "ebb72e4a77d9c1e479f4db6dcba5ef357adc2ac746cf2376784a211f69db53e2"
+                  },
+                  {
+                      "path":  "public/icons/icon.svg",
+                      "size":  375,
+                      "sha256":  "955eba6cc9857127daed1bf8d0aec8cb6b1b125fdbcde40b4ef39e34407e41d5"
+                  },
+                  {
+                      "path":  "public/manifest.json",
+                      "size":  279,
+                      "sha256":  "9376d2e52aba9445d83a602364aa51b670ec90109e0cdcd2ca951cfe0604b051"
+                  },
+                  {
+                      "path":  "public/sw.js",
+                      "size":  612,
+                      "sha256":  "5f6846c858106dbf6a46fde88b112102469ba5a288c04cdbec19f6ae6e12d34e"
+                  },
+                  {
+                      "path":  "README.md",
+                      "size":  2451,
+                      "sha256":  "275e5982c642fcceed4730d035277075064586b97d3ef4dfea33973110b50193"
+                  },
+                  {
+                      "path":  "README-ATUALIZADOR.md",
+                      "size":  1684,
+                      "sha256":  "9e382b645c95301ee345a19207dce23f5a481763211331ef05090e96a7556bcc"
+                  },
+                  {
+                      "path":  "README-HOSPEDAGEM.md",
+                      "size":  358,
+                      "sha256":  "9ab4b5f7820071c50ec8540fccb7101ae3cad056ffc4fb40ab12dedd4745fd0e"
+                  },
+                  {
+                      "path":  "RELEASE-NOTES.md",
+                      "size":  1237,
+                      "sha256":  "7fc4eddce7102029bbce89cff466fec5a0b3b39ebaaf9e66c97f79f982592549"
+                  },
+                  {
+                      "path":  "storage/.htaccess",
+                      "size":  135,
+                      "sha256":  "65e0dad8c3e06aff754a1aa691d5c5f1e7c3e25ea5d8d88e9e463f0f59c191a1"
+                  },
+                  {
+                      "path":  "storage/updates/.htaccess",
+                      "size":  33,
+                      "sha256":  "1581faf462f67052c23dee5420cf8c329d6159b54ac433b4eed97a74f3e9ab51"
+                  },
+                  {
+                      "path":  "tests/cycle_management_test.php",
+                      "size":  3895,
+                      "sha256":  "d6d7c1d4bcd0181aab6663345eb2c223a0310b3e9c2a3e217b0e7d33e323f95b"
+                  },
+                  {
+                      "path":  "tests/global_administration_test.php",
+                      "size":  7805,
+                      "sha256":  "06b296f21dbaa0be322b40badba5d0b83fa3cdf891d8d92abdb10f3bc11d4eb7"
+                  },
+                  {
+                      "path":  "tests/mariadb_migration_test.php",
+                      "size":  13147,
+                      "sha256":  "662551da72e018df16a9a779791e11b62074e5044eb59c8ca7b9f90599bff7bd"
+                  },
+                  {
+                      "path":  "tests/multi_tenancy_test.php",
+                      "size":  6414,
+                      "sha256":  "6cff64db5a786c631077ec70318003bc24264e70f8b3cd9af6f66e832d01ccf3"
+                  }
+              ]
+}

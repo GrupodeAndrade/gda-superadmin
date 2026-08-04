@@ -1,0 +1,1 @@
+<?php $title='Página não encontrada'; ?><section class="error-page"><strong>404</strong><h1>Página não encontrada</h1><p>O endereço informado não existe ou foi movido.</p><a class="btn primary" href="<?= e(base_url('dashboard')) ?>">Voltar ao início</a></section>

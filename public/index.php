@@ -4,7 +4,15 @@ declare(strict_types=1);
 $context = require dirname(__DIR__) . '/bootstrap/app.php';
 require dirname(__DIR__) . '/app/Helpers/helpers.php';
 
-if (empty($context['local']['installed'])) {
+$runtime = $context['runtime'];
+if (empty($runtime['configured'])) {
+    require dirname(__DIR__) . '/install/index.php';
+    exit;
+}
+
+$installationState = App\Services\InstallationState::detect(App\Services\Database::connection());
+App\Services\InstallationState::assertInstalledOrEmpty($installationState);
+if ($installationState === App\Services\InstallationState::EMPTY) {
     require dirname(__DIR__) . '/install/index.php';
     exit;
 }

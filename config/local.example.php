@@ -1,4 +1,6 @@
 <?php
+// Fallback para instalações tradicionais. Em Docker/Coolify, use as variáveis
+// DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME e DB_PASSWORD; elas têm precedência.
 return [
     'installed' => false,
     'app_name' => 'GDA Plataforma',
@@ -12,4 +14,3 @@ return [
         'charset' => 'utf8mb4',
     ],
 ];
-

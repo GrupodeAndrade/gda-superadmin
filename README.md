@@ -34,6 +34,12 @@ Versão 1.0.0, aplicação PHP 8.3 + MySQL/MariaDB sem framework e sem dependên
 
 Não há credenciais padrão. O instalador cria a conta informada pelo responsável.
 
+### Docker e Coolify
+
+Em containers, configure a conexão em runtime com `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` e `DB_PASSWORD`. `APP_URL` é opcional e deve conter a URL pública HTTPS. As variáveis têm precedência sobre `config/local.php`; não versione `.env`, senhas ou o arquivo local.
+
+Com as variáveis completas, a aplicação consulta o banco apenas para reconhecer seu estado. O instalador só é liberado quando o banco não contém tabelas. Schema parcial, ausência de Super Administrador ativo, credenciais recusadas ou indisponibilidade do banco bloqueiam a instalação sem expor os dados de conexão. Instalações tradicionais continuam usando `config/local.php`.
+
 ## Instalação no cPanel
 
 1. Em **MultiPHP Manager**, selecione PHP 8.3 para `admin.gda.app.br`.

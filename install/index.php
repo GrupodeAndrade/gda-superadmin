@@ -5,19 +5,23 @@ use App\Services\Csrf;
 
 $errors = [];
 $platformName = 'GDA Plataforma';
-$appUrl = (isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
+$runtime ??= ['source' => 'none', 'configured' => false, 'app_url' => null, 'db' => null];
+$environmentMode = ($runtime['source'] ?? 'none') === 'environment';
+$appUrl = $runtime['app_url'] ?? ((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\'));
 $values = [
-    'db_host' => $_POST['db_host'] ?? 'localhost',
-    'db_port' => $_POST['db_port'] ?? '3306',
-    'db_name' => $_POST['db_name'] ?? '',
-    'db_user' => $_POST['db_user'] ?? '',
+    'db_host' => $environmentMode ? '' : ($_POST['db_host'] ?? 'localhost'),
+    'db_port' => $environmentMode ? '' : ($_POST['db_port'] ?? '3306'),
+    'db_name' => $environmentMode ? '' : ($_POST['db_name'] ?? ''),
+    'db_user' => $environmentMode ? '' : ($_POST['db_user'] ?? ''),
     'admin_name' => $_POST['admin_name'] ?? '',
     'admin_email' => $_POST['admin_email'] ?? '',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!Csrf::verify($_POST['_token'] ?? null)) $errors[] = 'A sessão expirou. Recarregue a página.';
-    foreach (['db_host','db_port','db_name','db_user','admin_name','admin_email','admin_password','admin_password_confirmation'] as $field) {
+    $requiredFields = ['admin_name','admin_email','admin_password','admin_password_confirmation'];
+    if (!$environmentMode) $requiredFields = [...['db_host','db_port','db_name','db_user'], ...$requiredFields];
+    foreach ($requiredFields as $field) {
         if (trim((string) ($_POST[$field] ?? '')) === '') $errors[] = 'Preencha todos os campos obrigatórios.';
     }
     if (!filter_var($_POST['admin_email'] ?? '', FILTER_VALIDATE_EMAIL)) $errors[] = 'Informe um e-mail válido.';
@@ -31,22 +35,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $localFile = base_path('config/local.php');
         $localCreated = false;
         try {
-            if (is_file($localFile)) throw new RuntimeException('config/local.php já existe. O instalador não pode sobrescrevê-lo.');
-            if (!is_writable(base_path('config'))) throw new RuntimeException('A pasta config não possui permissão de escrita.');
-            $probe = base_path('config/.gda-install-' . bin2hex(random_bytes(6)) . '.tmp');
-            if (file_put_contents($probe, 'teste', LOCK_EX) === false || !is_file($probe) || !unlink($probe)) {
-                @unlink($probe);
-                throw new RuntimeException('Não foi possível criar e remover um arquivo de teste em config/.');
+            if (!$environmentMode) {
+                if (is_file($localFile)) throw new RuntimeException('config/local.php já existe. O instalador não pode sobrescrevê-lo.');
+                if (!is_writable(base_path('config'))) throw new RuntimeException('A pasta config não possui permissão de escrita.');
+                $probe = base_path('config/.gda-install-' . bin2hex(random_bytes(6)) . '.tmp');
+                if (file_put_contents($probe, 'teste', LOCK_EX) === false || !is_file($probe) || !unlink($probe)) {
+                    @unlink($probe);
+                    throw new RuntimeException('Não foi possível criar e remover um arquivo de teste em config/.');
+                }
             }
-            $dbName = preg_replace('/[^a-zA-Z0-9_$-]/', '', (string) $_POST['db_name']);
-            if ($dbName !== $_POST['db_name']) throw new RuntimeException('O nome do banco contém caracteres inválidos.');
-            $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', $_POST['db_host'], (int) $_POST['db_port'], $dbName);
-            $pdo = new PDO($dsn, $_POST['db_user'], $_POST['db_password'] ?? '', [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_EMULATE_PREPARES => false,
-            ]);
-            $existing = $pdo->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=? AND table_name IN ('users','clients','projects','settings')");
-            $existing->execute([$dbName]);
+            $dbNameInput = $environmentMode ? (string) $runtime['db']['name'] : (string) $_POST['db_name'];
+            $dbName = preg_replace('/[^a-zA-Z0-9_$-]/', '', $dbNameInput);
+            if ($dbName !== $dbNameInput) throw new RuntimeException('O nome do banco contém caracteres inválidos.');
+            if ($environmentMode) {
+                $pdo = App\Services\Database::connection();
+            } else {
+                $dsn = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', $_POST['db_host'], (int) $_POST['db_port'], $dbName);
+                $pdo = new PDO($dsn, $_POST['db_user'], $_POST['db_password'] ?? '', [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]);
+            }
+            if ($environmentMode) {
+                $existing = $pdo->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_type='BASE TABLE'");
+            } else {
+                $existing = $pdo->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=? AND table_name IN ('users','clients','projects','settings')");
+                $existing->execute([$dbName]);
+            }
             if ((int) $existing->fetchColumn() > 0) {
                 throw new RuntimeException('Foi detectada uma instalação parcial. Use um banco vazio ou remova com segurança as tabelas incompletas antes de tentar novamente.');
             }
@@ -67,19 +82,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
             $settingStmt = $pdo->prepare('INSERT INTO settings (setting_key,setting_value,type) VALUES (?,?,"string")');
             foreach ($settings as $key => $value) $settingStmt->execute([$key,$value]);
-            $config = "<?php\nreturn " . var_export([
-                'installed' => true,
-                'app_name' => $platformName,
-                'app_url' => rtrim($appUrl, '/'),
-                'db' => ['host' => $_POST['db_host'], 'port' => (int) $_POST['db_port'], 'name' => $dbName, 'user' => $_POST['db_user'], 'password' => $_POST['db_password'] ?? '', 'charset' => 'utf8mb4'],
-            ], true) . ";\n";
-            if ((PHP_SAPI === 'cli' && getenv('GDA_TEST_INSTALL_WRITE_FAILURE') === '1') || file_put_contents($tmp, $config, LOCK_EX) === false) {
-                throw new RuntimeException('Não foi possível preparar config/local.php.');
+            if (!$environmentMode) {
+                $config = "<?php\nreturn " . var_export([
+                    'installed' => true,
+                    'app_name' => $platformName,
+                    'app_url' => rtrim($appUrl, '/'),
+                    'db' => ['host' => $_POST['db_host'], 'port' => (int) $_POST['db_port'], 'name' => $dbName, 'user' => $_POST['db_user'], 'password' => $_POST['db_password'] ?? '', 'charset' => 'utf8mb4'],
+                ], true) . ";\n";
+                if ((PHP_SAPI === 'cli' && getenv('GDA_TEST_INSTALL_WRITE_FAILURE') === '1') || file_put_contents($tmp, $config, LOCK_EX) === false) {
+                    throw new RuntimeException('Não foi possível preparar config/local.php.');
+                }
+                if (is_file($localFile) || !rename($tmp, $localFile)) {
+                    throw new RuntimeException('Não foi possível gravar config/local.php. Verifique as permissões.');
+                }
+                $localCreated = true;
             }
-            if (is_file($localFile) || !rename($tmp, $localFile)) {
-                throw new RuntimeException('Não foi possível gravar config/local.php. Verifique as permissões.');
-            }
-            $localCreated = true;
             $pdo->commit();
             flash('success', 'Instalação concluída. Entre com sua conta de Super Administrador.');
             redirect('login');
@@ -87,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($pdo) && $pdo->inTransaction()) $pdo->rollBack();
             @unlink($tmp);
             if ($localCreated) @unlink($localFile);
-            @file_put_contents(base_path('storage/logs/install.log'), '[' . date('c') . '] ' . $e->getMessage() . "\n", FILE_APPEND);
+            @file_put_contents(base_path('storage/logs/install.log'), '[' . date('c') . '] Falha segura durante a instalação.\n', FILE_APPEND);
             $safeMessage = str_contains($e->getMessage(), 'instalação parcial')
                 ? $e->getMessage()
                 : 'Não foi possível concluir a instalação. Verifique os dados do banco e as permissões.';
@@ -102,11 +119,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php foreach ($errors as $error): ?><div class="alert error"><?= e($error) ?></div><?php endforeach; ?>
 <form method="post" class="form-grid" data-loading><?= csrf_field() ?>
 <h2 class="full">Banco de Dados</h2>
+<?php if ($environmentMode): ?>
+<p class="full">Conexão configurada com segurança pelo ambiente de produção.</p>
+<?php else: ?>
 <label>Host *<input name="db_host" value="<?= e($values['db_host']) ?>" required></label>
 <label>Porta *<input type="number" name="db_port" value="<?= e($values['db_port']) ?>" required></label>
 <label>Nome do banco *<input name="db_name" value="<?= e($values['db_name']) ?>" required></label>
 <label>Usuário *<input name="db_user" value="<?= e($values['db_user']) ?>" required></label>
 <label class="full">Senha<input type="password" name="db_password" autocomplete="new-password"></label>
+<?php endif; ?>
 <h2 class="full">Super Administrador</h2>
 <label>Nome *<input name="admin_name" value="<?= e($values['admin_name']) ?>" required></label>
 <label>E-mail *<input type="email" name="admin_email" value="<?= e($values['admin_email']) ?>" required></label>

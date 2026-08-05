@@ -2,7 +2,8 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $required = @(
   'index.php','.htaccess','version.json','database/schema.sql','config/local.example.php',
-  'public/index.php','routes/web.php','install/index.php','app/Services/UpdateService.php'
+  'public/index.php','routes/web.php','install/index.php','app/Services/UpdateService.php',
+  'app/Services/RuntimeConfig.php','app/Services/InstallationState.php','tests/runtime-configuration.php'
 )
 foreach ($item in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $item))) { throw "Arquivo obrigatório ausente: $item" }
@@ -56,6 +57,17 @@ foreach ($integrityRule in @("hash_file('sha256'","hash_equals(","manifest!=", '
 $installer = Get-Content -Raw -LiteralPath (Join-Path $root 'install/index.php')
 foreach ($installerRule in @('is_writable','information_schema.tables','config/.gda-install-','is_file($localFile)','@unlink($tmp)','GDA_TEST_INSTALL_WRITE_FAILURE')) {
   if (-not $installer.Contains($installerRule)) { throw "Proteção do instalador ausente: $installerRule" }
+}
+$runtime = Get-Content -Raw -LiteralPath (Join-Path $root 'app/Services/RuntimeConfig.php')
+foreach ($runtimeRule in @('DB_HOST','DB_PORT','DB_DATABASE','DB_USERNAME','DB_PASSWORD','source'' => ''environment','source'' => ''local_file')) {
+  if (-not $runtime.Contains($runtimeRule)) { throw "Configuração de runtime ausente: $runtimeRule" }
+}
+$installationState = Get-Content -Raw -LiteralPath (Join-Path $root 'app/Services/InstallationState.php')
+foreach ($stateRule in @('ESSENTIAL_TABLES','information_schema.tables','role=''super_admin''','status=''active''','PARTIAL')) {
+  if (-not $installationState.Contains($stateRule)) { throw "Detecção de instalação ausente: $stateRule" }
+}
+if ($installer.Contains('name="db_host"') -and -not $installer.Contains('if ($environmentMode)')) {
+  throw 'Credenciais do ambiente permanecem editáveis no instalador.'
 }
 Write-Output 'Validação estrutural aprovada.'
 Write-Output 'Autorização centralizada: aprovada por inspeção estática.'

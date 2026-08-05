@@ -4,8 +4,6 @@ declare(strict_types=1);
 require __DIR__ . '/autoload.php';
 
 $appConfig = require dirname(__DIR__) . '/config/app.php';
-$localFile = dirname(__DIR__) . '/config/local.php';
-$localConfig = is_file($localFile) ? require $localFile : ['installed' => false];
 
 date_default_timezone_set($appConfig['timezone']);
 ini_set('default_charset', 'UTF-8');
@@ -36,5 +34,7 @@ set_exception_handler(static function (Throwable $e) use ($appConfig): void {
     is_file($errorView) ? require $errorView : print('Erro interno.');
 });
 
-return ['app' => $appConfig, 'local' => $localConfig];
+$runtime = App\Services\RuntimeConfig::load($appConfig['root']);
+App\Services\Database::configure($runtime);
 
+return ['app' => $appConfig, 'runtime' => $runtime];

@@ -15,30 +15,30 @@ foreach ([0 => 'Banco de dados', 2 => 'Armazenamento', 3 => 'Logs do sistema', 1
 
     <section class="dashboard-summary-grid" aria-label="Resumo operacional">
         <a class="dashboard-summary-card" href="<?= e(base_url('clientes')) ?>">
-            <span class="dashboard-summary-icon tone-blue" aria-hidden="true">◉</span>
-            <strong><?= (int) $stats['total_clients'] ?></strong><span class="dashboard-summary-label">Clientes</span><small>Ver clientes</small>
+            <span class="dashboard-summary-icon tone-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <strong class="dashboard-summary-value"><?= (int) $stats['total_clients'] ?></strong><span class="dashboard-summary-label">Clientes</span><span class="dashboard-summary-action">Ver todos</span>
         </a>
         <a class="dashboard-summary-card" href="<?= e(base_url('clientes?status=active')) ?>">
-            <span class="dashboard-summary-icon tone-green" aria-hidden="true">✓</span>
-            <strong><?= (int) $stats['active_clients'] ?></strong><span class="dashboard-summary-label">Clientes ativos</span><small>Ver clientes ativos</small>
+            <span class="dashboard-summary-icon tone-green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 12 2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span>
+            <strong class="dashboard-summary-value"><?= (int) $stats['active_clients'] ?></strong><span class="dashboard-summary-label">Clientes ativos</span><span class="dashboard-summary-action">Ver ativos</span>
         </a>
         <a class="dashboard-summary-card" href="<?= e(base_url('projetos')) ?>">
-            <span class="dashboard-summary-icon tone-purple" aria-hidden="true">◆</span>
-            <strong><?= (int) $stats['total_projects'] ?></strong><span class="dashboard-summary-label">Projetos</span><small>Ver projetos</small>
+            <span class="dashboard-summary-icon tone-purple" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4zM8 7V4h8v3M4 12h16"/></svg></span>
+            <strong class="dashboard-summary-value"><?= (int) $stats['total_projects'] ?></strong><span class="dashboard-summary-label">Projetos</span><span class="dashboard-summary-action">Ver todos</span>
         </a>
         <a class="dashboard-summary-card" href="<?= e(base_url('projetos')) ?>">
-            <span class="dashboard-summary-icon tone-orange" aria-hidden="true">▦</span>
-            <strong><?= (int) $stats['production_projects'] ?></strong><span class="dashboard-summary-label">Módulos em produção</span><small>Ver módulos</small>
+            <span class="dashboard-summary-icon tone-orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span>
+            <strong class="dashboard-summary-value"><?= (int) $stats['production_projects'] ?></strong><span class="dashboard-summary-label">Módulos em produção</span><span class="dashboard-summary-action">Ver módulos</span>
         </a>
         <a class="dashboard-summary-card" href="<?= e(base_url('atualizacoes')) ?>">
-            <span class="dashboard-summary-icon tone-coral" aria-hidden="true">↻</span>
-            <strong class="dashboard-summary-text"><?= $platform['last_update'] ? e('v' . $platform['last_update']['new_version']) : 'Nenhuma' ?></strong>
-            <span class="dashboard-summary-label">Atualizações</span><small><?= $platform['last_update'] ? e('Última em ' . date('d/m/Y', strtotime($platform['last_update']['updated_at']))) : 'Nenhuma registrada' ?></small>
+            <span class="dashboard-summary-icon tone-coral" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 7h-5V2M20 7l-4-4M4 17h5v5M4 17l4 4M5.5 9a7 7 0 0 1 11-4M18.5 15a7 7 0 0 1-11 4"/></svg></span>
+            <strong class="dashboard-summary-value dashboard-summary-text"><?= $platform['last_update'] ? e('v' . $platform['last_update']['new_version']) : 'Nenhuma' ?></strong>
+            <span class="dashboard-summary-label">Atualizações</span><span class="dashboard-summary-action"><?= $platform['last_update'] ? e('Última em ' . date('d/m/Y', strtotime($platform['last_update']['updated_at']))) : 'Nenhuma registrada' ?></span>
         </a>
         <a class="dashboard-summary-card" href="<?= e(base_url('atualizacoes')) ?>">
-            <span class="dashboard-summary-icon tone-teal" aria-hidden="true">◷</span>
-            <strong class="dashboard-summary-text"><?= $platform['last_backup_at'] ? e(date('d/m/Y', (int) $platform['last_backup_at'])) : 'Nenhum' ?></strong>
-            <span class="dashboard-summary-label">Último backup</span><small><?= $platform['last_backup_at'] ? e(date('H:i', (int) $platform['last_backup_at'])) : 'Nenhum backup' ?></small>
+            <span class="dashboard-summary-icon tone-teal" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4M5 13v7h14v-7"/></svg></span>
+            <strong class="dashboard-summary-value dashboard-summary-text"><?= $platform['last_backup_at'] ? e(date('d/m/Y', (int) $platform['last_backup_at'])) : 'Nenhum' ?></strong>
+            <span class="dashboard-summary-label">Último backup</span><span class="dashboard-summary-action"><?= $platform['last_backup_at'] ? e(date('H:i', (int) $platform['last_backup_at'])) : 'Nenhum backup' ?></span>
         </a>
     </section>
 

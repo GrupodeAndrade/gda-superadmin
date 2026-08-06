@@ -115,6 +115,11 @@ try {
     }
     dashboardAssert(substr_count($html, 'dashboard-summary-card') === 6, 'O resumo deve conter exatamente seis cartões.');
     dashboardAssert(substr_count($html, 'dashboard-summary-icon') === 6, 'Cada indicador deve conter um ícone.');
+    dashboardAssert(substr_count($html, 'dashboard-summary-value') === 6, 'Cada indicador deve conter um valor independente.');
+    dashboardAssert(substr_count($html, 'dashboard-summary-action') === 6, 'Cada indicador deve conter uma ação independente.');
+    dashboardAssert(substr_count($html, '<svg viewBox="0 0 24 24"') === 6, 'Os indicadores devem usar seis SVGs seguros.');
+    dashboardAssert((bool) preg_match('/<section class="dashboard-summary-grid"[^>]*>(.*?)<\/section>/s', $html, $summaryGrid), 'Wrapper do resumo inválido.');
+    dashboardAssert(substr_count($summaryGrid[1], '<a class="dashboard-summary-card"') === 6, 'Os seis cartões devem estar dentro da grade do resumo.');
     dashboardAssert(str_contains($html, 'dashboard-modules-grid'), 'Grade de módulos ausente.');
     dashboardAssert(str_contains($html, 'dashboard-main-grid'), 'Composição de módulos e saúde ausente.');
     dashboardAssert(str_contains($html, 'dashboard-activity-list'), 'Lista de atividades ausente.');
@@ -130,10 +135,12 @@ try {
     dashboardAssert(str_contains($css, '.dashboard-modules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))'), 'Grade de módulos deve ter no máximo duas colunas.');
     dashboardAssert(str_contains($css, '.dashboard-main-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(270px,1fr)'), 'Proporção entre módulos e saúde incorreta.');
     dashboardAssert(str_contains($css, ':focus-visible'), 'Foco visível dos atalhos ausente.');
+    $layout = file_get_contents(dirname(__DIR__) . '/app/Views/layouts/admin.php');
+    dashboardAssert(str_contains($layout, "==='Dashboard'") && str_contains($layout, "hash_file('sha256',\$cssPath)"), 'Versionamento condicional do CSS do Dashboard ausente.');
 
     if (PHP_SAPI === 'cli-server' && isset($_GET['visual'])) {
-        $visualHtml = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard visual</title><link rel="stylesheet" href="/public/assets/css/app.css"></head><body>'
-            . '<aside class="sidebar open" id="sidebar"><a class="logo" href="#"><b>GDA</b><span>Plataforma<small>Super Administrador</small></span></a><nav>'
+        $visualHtml = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dashboard visual</title><link rel="stylesheet" href="/public/assets/css/app.css?v=' . substr(hash_file('sha256', dirname(__DIR__) . '/public/assets/css/app.css'), 0, 12) . '"></head><body>'
+            . '<aside class="sidebar" id="sidebar"><a class="logo" href="#"><b>GDA</b><span>Plataforma<small>Super Administrador</small></span></a><nav>'
             . '<a class="active" href="#"><i>⌂</i>Dashboard</a><a href="#"><i>◉</i>Clientes GDA</a><a href="#"><i>◆</i>Projetos GDA</a><a href="#"><i>↻</i>Atualizações</a><a href="#"><i>≡</i>Logs</a><a href="#"><i>⚙</i>Configurações</a>'
             . '</nav><form><button class="nav-logout" type="button">⇥ Sair</button></form><footer>GDA Plataforma v1.0.0</footer></aside>'
             . '<div class="app"><header class="topbar"><button class="menu-toggle" type="button" aria-label="Abrir menu">☰</button><div><strong>Dashboard</strong><small>Grupo DeAndrade</small></div><a class="user-chip" href="#"><span>S</span>Super Admin</a></header>'

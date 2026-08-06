@@ -14,17 +14,18 @@
 .dashboard-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:16px;width:100%;margin-bottom:28px}
 .dashboard-summary-card{display:grid;grid-template-columns:48px minmax(0,1fr);grid-template-rows:auto auto 1fr;column-gap:15px;min-width:0;min-height:142px;padding:19px 20px;border:1px solid var(--line);border-radius:15px;background:var(--white);box-shadow:0 10px 28px rgba(11,31,58,.065);color:var(--text);transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
 .dashboard-summary-card:hover{border-color:#b9c7d9;box-shadow:0 13px 32px rgba(11,31,58,.1);transform:translateY(-2px)}
-.dashboard-summary-icon{display:grid;grid-row:1/4;place-items:center;align-self:start;width:48px;height:48px;border-radius:13px;font-size:21px;font-weight:800}
+.dashboard-summary-icon{display:grid;grid-row:1/4;place-items:center;align-self:start;width:48px;height:48px;border-radius:13px}
+.dashboard-summary-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .dashboard-summary-icon.tone-blue{background:#e4efff;color:#1761c5}
 .dashboard-summary-icon.tone-green{background:#ddf6e9;color:#138259}
 .dashboard-summary-icon.tone-purple{background:#efe8ff;color:#7451c8}
 .dashboard-summary-icon.tone-orange{background:#fff0d4;color:#a46706}
 .dashboard-summary-icon.tone-coral{background:#ffe5df;color:#bc4d3a}
 .dashboard-summary-icon.tone-teal{background:#dcf5f2;color:#147b73}
-.dashboard-summary-card>strong{align-self:end;color:var(--navy);font-size:27px;line-height:1.15;overflow-wrap:anywhere}
+.dashboard-summary-value{align-self:end;color:var(--navy);font-size:27px;line-height:1.15;overflow-wrap:anywhere}
 .dashboard-summary-card>.dashboard-summary-text{font-size:20px}
 .dashboard-summary-label{margin-top:3px;color:#43506a;font-size:12px;font-weight:650}
-.dashboard-summary-card>small{align-self:end;margin-top:12px;color:var(--blue);font-size:11px}
+.dashboard-summary-action{align-self:end;margin-top:12px;color:var(--blue);font-size:11px}
 .dashboard-summary-card:focus-visible,.dashboard-module-card .btn:focus-visible{outline:3px solid #1e66d040;outline-offset:3px}
 .dashboard-main-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(270px,1fr);gap:22px;width:100%;min-width:0}
 .dashboard-module-panel,.dashboard-health-panel,.dashboard-activity-panel{min-width:0}

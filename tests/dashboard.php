@@ -48,7 +48,7 @@ try {
     dashboardAssert(str_contains($emptyHtml, 'Nenhum cliente cadastrado.'), 'Estado vazio de clientes ausente.');
     dashboardAssert(str_contains($emptyHtml, 'Cadastrar primeiro cliente'), 'Atalho de primeiro cliente ausente.');
     dashboardAssert(str_contains($emptyHtml, 'Nenhum backup'), 'Estado vazio de backup ausente.');
-    dashboardAssert(str_contains($emptyHtml, 'Nenhuma atualização registrada'), 'Estado vazio de atualização ausente.');
+    dashboardAssert(str_contains($emptyHtml, 'Nenhuma registrada'), 'Estado vazio de atualização ausente.');
 
     $database->exec("INSERT INTO users(id,name) VALUES(1,'Super Admin')");
     $client = $database->prepare('INSERT INTO clients(identifier,name,administrator_name,email,status,created_at,deleted_at) VALUES(?,?,?,?,?,?,NULL)');
@@ -107,13 +107,23 @@ try {
 
     $html = renderDashboard($filled);
     dashboardAssert(!str_contains($html, '<script>alert(1)</script>') && str_contains($html, '&lt;script&gt;alert(1)&lt;/script&gt;'), 'Conteúdo do Dashboard não foi escapado.');
-    foreach (['clientes?status=active','clientes?status=inactive','projetos/1','clientes/6','logs'] as $linkPath) {
+    foreach (['clientes?status=active','projetos/1','clientes/6','logs'] as $linkPath) {
         dashboardAssert(str_contains($html, $linkPath), "Link obrigatório ausente: $linkPath");
     }
+    foreach (['Clientes','Clientes ativos','Projetos','Módulos em produção','Atualizações','Último backup'] as $summaryLabel) {
+        dashboardAssert(str_contains($html, '>' . $summaryLabel . '<'), "Indicador obrigatório ausente: $summaryLabel");
+    }
+    dashboardAssert(substr_count($html, 'dashboard-summary-card') === 6, 'O resumo deve conter exatamente seis cartões.');
+    dashboardAssert(str_contains($html, 'dashboard-modules-grid'), 'Grade de módulos ausente.');
+    dashboardAssert(str_contains($html, 'dashboard-content-grid'), 'Composição de clientes e saúde ausente.');
+    dashboardAssert(str_contains($html, 'dashboard-activity-list'), 'Lista de atividades ausente.');
 
     $css = file_get_contents(dirname(__DIR__) . '/public/assets/css/app.css');
-    dashboardAssert(str_contains($css, '@media(max-width:1200px)') && str_contains($css, '@media(max-width:850px)') && str_contains($css, '@media(max-width:650px)'), 'Breakpoints responsivos ausentes.');
-    dashboardAssert(str_contains($css, '.dashboard-overview{min-width:0;overflow-x:hidden}'), 'Proteção contra rolagem horizontal ausente.');
+    dashboardAssert(str_contains($css, '@media(max-width:1200px)') && str_contains($css, '@media(max-width:850px)') && str_contains($css, '@media(max-width:600px)'), 'Breakpoints responsivos ausentes.');
+    dashboardAssert(str_contains($css, '.dashboard-page{width:100%;min-width:0;overflow:hidden}'), 'Proteção contra rolagem horizontal ausente.');
+    dashboardAssert(str_contains($css, '.dashboard-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr))'), 'Grade principal do resumo incorreta.');
+    dashboardAssert(str_contains($css, '.dashboard-modules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))'), 'Grade de módulos deve ter no máximo duas colunas.');
+    dashboardAssert(str_contains($css, '.dashboard-content-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr)'), 'Proporção entre clientes e saúde incorreta.');
     dashboardAssert(str_contains($css, ':focus-visible'), 'Foco visível dos atalhos ausente.');
 
     if (PHP_SAPI === 'cli-server' && isset($_GET['visual'])) {
@@ -125,7 +135,7 @@ try {
             . '<main class="content"><div class="breadcrumb"><a href="#">Início</a> / Dashboard</div>' . $html . '</main></div>'
             . '<script>document.querySelector(".menu-toggle").addEventListener("click",function(){document.querySelector("#sidebar").classList.toggle("open")});</script></body></html>';
     } else {
-        echo "Dashboard aprovado: estados vazio e preenchido, 26 verificações funcionais e responsivas.\n";
+        echo "Dashboard aprovado: estados vazio e preenchido, hierarquia visual e regras responsivas.\n";
     }
 } finally {
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($testRoot, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);

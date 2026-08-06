@@ -1,1 +1,0 @@
-<h1>Diagnóstico</h1><div class="global-diagnostics"><?php foreach($report as$key=>$value):?><section class="global-panel"><h2><?= htmlspecialchars(str_replace('_',' ',$key)) ?></h2><pre><?= htmlspecialchars(is_array($value)?json_encode($value,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE):(string)$value) ?></pre></section><?php endforeach;?></div>

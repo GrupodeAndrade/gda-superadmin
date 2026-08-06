@@ -21,6 +21,9 @@ $router->post('/clientes/{id}',[ClientController::class,'update']);
 $router->post('/clientes/{id}/status',[ClientController::class,'toggle']);
 $router->get('/clientes/{id}/projetos',[ClientController::class,'projects']);
 $router->get('/projetos',[ProjectController::class,'index']);
+$router->get('/projetos/anexar',[ProjectController::class,'attachForm']);
+$router->post('/projetos/anexar',[ProjectController::class,'attach']);
+$router->get('/projetos/anexar/sucesso',[ProjectController::class,'attachSuccess']);
 $router->get('/projetos/{id}',[ProjectController::class,'show']);
 $router->get('/projetos/{id}/editar',[ProjectController::class,'edit']);
 $router->post('/projetos/{id}',[ProjectController::class,'update']);
@@ -35,4 +38,3 @@ $router->get('/configuracoes',[SettingsController::class,'index']);
 $router->post('/configuracoes',[SettingsController::class,'update']);
 $router->get('/perfil',[SettingsController::class,'profile']);
 $router->post('/perfil',[SettingsController::class,'updateProfile']);
-

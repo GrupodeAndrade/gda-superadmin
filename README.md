@@ -63,6 +63,8 @@ O catálogo de projetos relaciona módulos a clientes por `client_projects`. Con
 
 Senhas usam `password_hash()`/`password_verify()`. Toda mutação exige token CSRF. Consultas usam PDO com prepared statements, saídas são escapadas, o ID de sessão é regenerado no login e cookies usam HttpOnly, SameSite=Lax e Secure sob HTTPS. Há limitação de tentativas de login, proteção de diretórios e logs sem credenciais.
 
+Projetos podem ser anexados por uma chave de uso único. A Plataforma restringe a descoberta a HTTPS em `gda.app.br`, valida challenge e manifesto e registra a conexão sem persistir o segredo. Consulte [docs/MODULE-ATTACHMENT-PROTOCOL.md](docs/MODULE-ATTACHMENT-PROTOCOL.md).
+
 ## Atualizações e backups
 
 O upload aceita ZIP dentro do limite configurado. Primeiro ocorre a análise; instalar exige confirmação e senha atual. O ZIP precisa conter `update.json` e `payload/`. Caminhos absolutos, `..`, links simbólicos e alterações em `config/local.php`, backups, logs ou pacotes armazenados são rejeitados.

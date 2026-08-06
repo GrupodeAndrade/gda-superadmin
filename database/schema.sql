@@ -70,6 +70,27 @@ CREATE TABLE IF NOT EXISTS client_projects (
   INDEX idx_cp_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS project_connections (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  project_id BIGINT UNSIGNED NOT NULL,
+  module_instance_id VARCHAR(190) NOT NULL UNIQUE,
+  protocol_version SMALLINT UNSIGNED NOT NULL,
+  endpoint_url VARCHAR(1000) NOT NULL,
+  connection_status ENUM('attached','verified','pending','error','revoked') NOT NULL DEFAULT 'attached',
+  capabilities_json JSON NOT NULL,
+  public_key_fingerprint VARCHAR(255) NULL,
+  attached_by_user_id BIGINT UNSIGNED NULL,
+  attached_at DATETIME NOT NULL,
+  last_verified_at DATETIME NULL,
+  last_error_code VARCHAR(100) NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_project_connection (project_id,module_instance_id),
+  INDEX idx_connection_status (connection_status),
+  CONSTRAINT fk_connection_project FOREIGN KEY (project_id) REFERENCES projects(id),
+  CONSTRAINT fk_connection_user FOREIGN KEY (attached_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS settings (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   setting_key VARCHAR(120) NOT NULL UNIQUE,

@@ -8,6 +8,7 @@
 .env
 .env.*
 config/local.php
+modulos/gda-caixas
 
 Dockerfile*
 docker-compose*.yml
@@ -21,6 +22,7 @@ storage/cache/*
 storage/logs/*
 storage/temp/*
 storage/updates/*
+storage/sessions/*
 !storage/backups/.gitkeep
 !storage/cache/.gitkeep
 !storage/logs/.gitkeep

@@ -10,3 +10,6 @@ O registro do Caixas possui `full_name`, `admin_url` e `category`, além dos cam
 
 O painel Super Administrador permanece protegido no roteador e aceita exclusivamente usuários `super_admin`. Todas as alterações usam CSRF e prepared statements.
 
+## Anexação de módulos
+
+O fluxo é dividido entre parser da chave, política contra SSRF, transporte HTTP injetável, validador do manifesto, serviço transacional e repositório. `project_connections` preserva a identidade da instância sem guardar a chave. `projects` continua sendo o catálogo e `client_projects` continua sendo o vínculo entre clientes e módulos.

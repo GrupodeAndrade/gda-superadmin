@@ -14,3 +14,9 @@ return [
         'charset' => 'utf8mb4',
     ],
 ];
+
+// Integração de módulos usa variáveis de ambiente, nunca segredos neste arquivo:
+// GDA_MODULE_ATTACH_TIMEOUT=5
+// GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES=262144
+// GDA_MODULE_ALLOWED_DOMAIN=gda.app.br
+// GDA_PLATFORM_PUBLIC_URL=https://admin.gda.app.br

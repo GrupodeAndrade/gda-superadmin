@@ -8,19 +8,23 @@ use App\Services\Database;
 use App\Services\ModuleMigrationService;
 $host = getenv('GDA_TEST_DB_HOST') ?: '127.0.0.1';
 $port = (int) (getenv('GDA_TEST_DB_PORT') ?: 3407);
-$root = new PDO("mysql:host={$host};port={$port};charset=utf8mb4", 'root', '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+$user = getenv('GDA_TEST_DB_USER') ?: 'root';
+$root = new PDO("mysql:host={$host};port={$port};charset=utf8mb4", $user, getenv('GDA_TEST_DB_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
 $schema = file_get_contents(dirname(__DIR__) . '/database/schema.sql');
-$databases = ['gda_legacy','gda_empty','gda_duplicate','gda_partial','gda_failure','gda_installer'];
+$runPrefix = 'gda_caixas_test_' . bin2hex(random_bytes(5)) . '_';
+$databases = array_map(fn(string $suffix): string => $runPrefix . $suffix, ['legacy','empty','duplicate','partial','failure','installer']);
 $results = [];
 
 function useDatabase(PDO $root, string $name, string $schema): PDO
 {
+    global $runPrefix, $host, $port, $user;
+    $name = $runPrefix . preg_replace('/^gda_/', '', $name);
+    if (!preg_match('/^gda_caixas_test_[a-f0-9]{10}_[a-z]+$/', $name)) throw new RuntimeException('Nome descartável inválido.');
     $root->exec("DROP DATABASE IF EXISTS `{$name}`");
     $root->exec("CREATE DATABASE `{$name}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-    $pdo = new PDO("mysql:host=127.0.0.1;port=3407;dbname={$name};charset=utf8mb4", 'root', '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+    $pdo = new PDO("mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4", $user, getenv('GDA_TEST_DB_PASSWORD') ?: '', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
     $pdo->exec($schema);
     $property = new ReflectionProperty(Database::class, 'connection');
-    $property->setAccessible(true);
     $property->setValue(null, $pdo);
     return $pdo;
 }

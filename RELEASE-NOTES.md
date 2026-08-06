@@ -9,6 +9,9 @@ Primeira atualização oficial da GDA Plataforma.
 - Projetos recebem cards, listagem, detalhes, edição, status, URL pública e URL administrativa.
 - Dashboard, Clientes e Configurações passam a apresentar os dados do Caixas.
 - Instalações novas já recebem o cadastro oficial do projeto.
+- O Dashboard apresenta indicadores agrupados, módulos dinâmicos, situação do sistema e atividades recentes.
+- Projetos podem ser anexados por chave oficial, com validação de endpoint, challenge e manifesto.
+- Conexões são registradas em `project_connections` sem persistir a chave de anexação.
 
 ## Migração
 
@@ -22,4 +25,4 @@ A migração 20260801_register_gda_caixas atualiza o registro legado no mesmo ID
 
 ## Fora do escopo
 
-Esta versão não implementa SSO, provisionamento, integração interna com módulos, alteração de APIs ou comunicação com os subdomínios dos projetos.
+Esta versão não implementa SSO, provisionamento, sincronização, atualização remota ou endpoint no módulo Caixas.

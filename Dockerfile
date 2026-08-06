@@ -3,9 +3,11 @@ FROM php:8.3-apache
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libonig-dev \
+        libcurl4-openssl-dev \
         libzip-dev \
     && docker-php-ext-install -j"$(nproc)" \
         mbstring \
+        curl \
         pdo_mysql \
         zip \
     && a2enmod rewrite \

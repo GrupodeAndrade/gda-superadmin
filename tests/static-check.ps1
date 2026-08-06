@@ -3,7 +3,8 @@ $root = Split-Path -Parent $PSScriptRoot
 $required = @(
   'index.php','.htaccess','version.json','database/schema.sql','config/local.example.php',
   'public/index.php','routes/web.php','install/index.php','app/Services/UpdateService.php',
-  'app/Services/RuntimeConfig.php','app/Services/InstallationState.php','tests/runtime-configuration.php'
+  'app/Services/RuntimeConfig.php','app/Services/InstallationState.php','tests/runtime-configuration.php',
+  'app/Services/ProjectAttachmentService.php','app/Services/ProjectConnectionMigrationService.php','tests/module-attachment.php'
 )
 foreach ($item in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $item))) { throw "Arquivo obrigatório ausente: $item" }
@@ -11,11 +12,11 @@ foreach ($item in $required) {
 $version = Get-Content -Raw -LiteralPath (Join-Path $root 'version.json') | ConvertFrom-Json
 if ($version.app -ne 'gda-plataforma' -or $version.version -ne '1.0.0') { throw 'version.json inválido' }
 $schema = Get-Content -Raw -LiteralPath (Join-Path $root 'database/schema.sql')
-foreach ($table in @('users','clients','projects','client_projects','settings','activity_logs','system_updates','migrations','login_attempts')) {
+foreach ($table in @('users','clients','projects','client_projects','project_connections','settings','activity_logs','system_updates','migrations','login_attempts')) {
   if ($schema -notmatch "CREATE TABLE IF NOT EXISTS $table") { throw "Tabela ausente: $table" }
 }
 $routes = Get-Content -Raw -LiteralPath (Join-Path $root 'routes/web.php')
-foreach ($route in @('/login','/dashboard','/clientes','/projetos','/atualizacoes','/logs','/configuracoes','/perfil')) {
+foreach ($route in @('/login','/dashboard','/clientes','/projetos','/projetos/anexar','/atualizacoes','/logs','/configuracoes','/perfil')) {
   if (-not $routes.Contains($route)) { throw "Rota ausente: $route" }
 }
 $update = Get-Content -Raw -LiteralPath (Join-Path $root 'app/Services/UpdateService.php')

@@ -45,10 +45,9 @@ try {
     dashboardAssert($empty['platform']['version'] === '1.0.0', 'Versão da plataforma incorreta.');
     dashboardAssert($empty['clients'] === [] && $empty['activities'] === [], 'Estados vazios incorretos.');
     $emptyHtml = renderDashboard($empty);
-    dashboardAssert(str_contains($emptyHtml, 'Nenhum cliente cadastrado.'), 'Estado vazio de clientes ausente.');
-    dashboardAssert(str_contains($emptyHtml, 'Cadastrar primeiro cliente'), 'Atalho de primeiro cliente ausente.');
     dashboardAssert(str_contains($emptyHtml, 'Nenhum backup'), 'Estado vazio de backup ausente.');
     dashboardAssert(str_contains($emptyHtml, 'Nenhuma registrada'), 'Estado vazio de atualização ausente.');
+    dashboardAssert(str_contains($emptyHtml, 'Nenhuma atividade registrada recentemente.'), 'Estado vazio de atividades ausente.');
 
     $database->exec("INSERT INTO users(id,name) VALUES(1,'Super Admin')");
     $client = $database->prepare('INSERT INTO clients(identifier,name,administrator_name,email,status,created_at,deleted_at) VALUES(?,?,?,?,?,?,NULL)');
@@ -105,25 +104,31 @@ try {
     dashboardAssert(dashboard_project_status_label('inactive') === 'Inativo', 'Status inactive não traduzido.');
     dashboardAssert(dashboard_activity_label('login') === 'Login realizado com sucesso', 'Ação de login não traduzida.');
 
+    $filled['modules'][0]['description'] = '<script>alert(1)</script>';
     $html = renderDashboard($filled);
     dashboardAssert(!str_contains($html, '<script>alert(1)</script>') && str_contains($html, '&lt;script&gt;alert(1)&lt;/script&gt;'), 'Conteúdo do Dashboard não foi escapado.');
-    foreach (['clientes?status=active','projetos/1','clientes/6','logs'] as $linkPath) {
+    foreach (['clientes','clientes?status=active','projetos','projetos/1','atualizacoes','logs'] as $linkPath) {
         dashboardAssert(str_contains($html, $linkPath), "Link obrigatório ausente: $linkPath");
     }
     foreach (['Clientes','Clientes ativos','Projetos','Módulos em produção','Atualizações','Último backup'] as $summaryLabel) {
         dashboardAssert(str_contains($html, '>' . $summaryLabel . '<'), "Indicador obrigatório ausente: $summaryLabel");
     }
     dashboardAssert(substr_count($html, 'dashboard-summary-card') === 6, 'O resumo deve conter exatamente seis cartões.');
+    dashboardAssert(substr_count($html, 'dashboard-summary-icon') === 6, 'Cada indicador deve conter um ícone.');
     dashboardAssert(str_contains($html, 'dashboard-modules-grid'), 'Grade de módulos ausente.');
-    dashboardAssert(str_contains($html, 'dashboard-content-grid'), 'Composição de clientes e saúde ausente.');
+    dashboardAssert(str_contains($html, 'dashboard-main-grid'), 'Composição de módulos e saúde ausente.');
     dashboardAssert(str_contains($html, 'dashboard-activity-list'), 'Lista de atividades ausente.');
+    dashboardAssert(str_contains($html, 'Olá, Super Administrador!'), 'Saudação operacional ausente.');
+    foreach (['Banco de dados','Armazenamento','Logs do sistema','Backup','Atualizações'] as $healthLabel) {
+        dashboardAssert(str_contains($html, '>' . $healthLabel . '<'), "Verificação de sistema ausente: $healthLabel");
+    }
 
     $css = file_get_contents(dirname(__DIR__) . '/public/assets/css/app.css');
     dashboardAssert(str_contains($css, '@media(max-width:1200px)') && str_contains($css, '@media(max-width:850px)') && str_contains($css, '@media(max-width:600px)'), 'Breakpoints responsivos ausentes.');
     dashboardAssert(str_contains($css, '.dashboard-page{width:100%;min-width:0;overflow:hidden}'), 'Proteção contra rolagem horizontal ausente.');
     dashboardAssert(str_contains($css, '.dashboard-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr))'), 'Grade principal do resumo incorreta.');
     dashboardAssert(str_contains($css, '.dashboard-modules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))'), 'Grade de módulos deve ter no máximo duas colunas.');
-    dashboardAssert(str_contains($css, '.dashboard-content-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr)'), 'Proporção entre clientes e saúde incorreta.');
+    dashboardAssert(str_contains($css, '.dashboard-main-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(270px,1fr)'), 'Proporção entre módulos e saúde incorreta.');
     dashboardAssert(str_contains($css, ':focus-visible'), 'Foco visível dos atalhos ausente.');
 
     if (PHP_SAPI === 'cli-server' && isset($_GET['visual'])) {

@@ -1,20 +1,20 @@
 # Anexar projeto no Super Administrador
 
-Em **Projetos GDA → Anexar projeto**, o Super Administrador informa somente a chave gerada pela Administração Global do módulo. A Plataforma valida a estrutura, aplica a política contra SSRF, consulta o endpoint e valida o manifesto oficial.
+Em **Projetos GDA → Anexar projeto**, o Super Administrador informa a URL pública HTTPS do módulo e a chave temporária fornecida pela Administração Global daquele módulo.
 
-O registro ocorre em transação. Um product novo cria `projects`; o mesmo product e a mesma instância atualizam os metadados permitidos; outra instância para o mesmo product é bloqueada. O Caixas preexistente (`gda-caixas`) mantém o mesmo ID, histórico e vínculos em `client_projects`.
+O fluxo possui duas etapas independentes:
 
-`project_connections` armazena instância, protocolo, endpoint, estado, capabilities, fingerprint opcional, usuário e datas. Não armazena chave nem token. Estados previstos: anexado, verificado, pendente, erro e revogado.
+1. **Validar módulo** consulta `/gda/integration/attach`, valida a resposta e apresenta os dados reais sem escrever no banco.
+2. **Confirmar anexação** consulta `/gda/integration/attach/confirm`; somente depois do sucesso remoto registra o módulo em transação.
 
-Depois do sucesso, o projeto aparece imediatamente no catálogo e na seleção de módulos dos clientes. Nenhum cliente é criado ou provisionado. A página de detalhes mostra a integração e identifica recursos futuros sem habilitá-los.
+`ModuleAttachmentService` centraliza URL, chave, chamadas HTTP, contrato da resposta, compatibilidade, health, confirmação e duplicidade. `ModuleAttachmentClient` limita o transporte HTTPS e traduz falhas remotas em mensagens seguras. `ProjectConnectionRepository` é a única camada que grava `projects` e `project_connections`.
 
-Tentativas falhas são limitadas por usuário e IP/sessão numa janela curta. A auditoria registra ação, projeto, product, instância, resultado e código sanitizado, nunca o segredo.
+O registro preserva UUID, código, slug, nome, versão, versão da API, URL, tipo, data da anexação, status de integração, health, capabilities, compatibilidade e versão mínima GDA. Um projeto preexistente, como o Caixas, mantém o ID e os vínculos em `client_projects`.
+
+Tentativas falhas são limitadas por usuário e IP. A auditoria registra somente contexto não secreto. A chave permanece na sessão pelo tempo necessário à confirmação, expira em dez minutos e nunca é armazenada no banco, enviada em URL, exibida ou registrada.
 
 ## Configuração
 
-- `GDA_MODULE_ATTACH_TIMEOUT` — padrão `5`, intervalo de 2 a 15 segundos;
-- `GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES` — padrão `262144`, entre 16 KiB e 1 MiB;
-- `GDA_MODULE_ALLOWED_DOMAIN` — padrão `gda.app.br`;
-- `GDA_PLATFORM_PUBLIC_URL` — URL pública HTTPS da Plataforma.
-
-Não existem segredos de integração em configuração versionada.
+- `GDA_MODULE_ATTACH_TIMEOUT`: padrão `5`, entre 2 e 15 segundos;
+- `GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES`: padrão `262144`, entre 16 KiB e 1 MiB;
+- `GDA_MODULE_ALLOWED_DOMAIN`: padrão `gda.app.br`.

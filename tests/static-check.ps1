@@ -4,7 +4,8 @@ $required = @(
   'index.php','.htaccess','version.json','database/schema.sql','config/local.example.php',
   'public/index.php','routes/web.php','install/index.php','app/Services/UpdateService.php',
   'app/Services/RuntimeConfig.php','app/Services/InstallationState.php','tests/runtime-configuration.php',
-  'app/Services/ProjectAttachmentService.php','app/Services/ProjectConnectionMigrationService.php','tests/module-attachment.php'
+  'app/Services/ProjectAttachmentService.php','app/Services/ProjectConnectionMigrationService.php','tests/module-attachment.php',
+  'app/Services/ModuleAttachmentService.php','app/Services/ModuleAttachmentProtocolMigrationService.php','tests/module-attachment-official.php'
 )
 foreach ($item in $required) {
   if (-not (Test-Path -LiteralPath (Join-Path $root $item))) { throw "Arquivo obrigatório ausente: $item" }

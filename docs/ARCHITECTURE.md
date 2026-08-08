@@ -12,4 +12,4 @@ O painel Super Administrador permanece protegido no roteador e aceita exclusivam
 
 ## Anexação de módulos
 
-O fluxo é dividido entre parser da chave, política contra SSRF, transporte HTTP injetável, validador do manifesto, serviço transacional e repositório. `project_connections` preserva a identidade da instância sem guardar a chave. `projects` continua sendo o catálogo e `client_projects` continua sendo o vínculo entre clientes e módulos.
+O protocolo oficial recebe URL pública e chave temporária. `ModuleAttachmentService` coordena validação e confirmação em duas chamadas distintas; a primeira não grava dados e a segunda somente abre a transação local depois do sucesso remoto. A política contra SSRF, o transporte HTTPS e o repositório permanecem separados e testáveis. `project_connections` preserva UUID, metadados operacionais e identidade da instância sem guardar a chave. `projects` continua sendo o catálogo e `client_projects` continua sendo o vínculo entre clientes e módulos.

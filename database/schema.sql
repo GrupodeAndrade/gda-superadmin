@@ -86,6 +86,10 @@ CREATE TABLE IF NOT EXISTS project_connections (
   health_json JSON NULL,
   compatibility_json JSON NULL,
   minimum_version VARCHAR(30) NULL,
+  integration_status VARCHAR(30) NOT NULL DEFAULT 'nao_integrado',
+  machine_credential_encrypted TEXT NULL,
+  pairing_request_id CHAR(36) NULL,
+  integrated_at DATETIME NULL,
   public_key_fingerprint VARCHAR(255) NULL,
   attached_by_user_id BIGINT UNSIGNED NULL,
   attached_at DATETIME NOT NULL,
@@ -99,6 +103,34 @@ CREATE TABLE IF NOT EXISTS project_connections (
   INDEX idx_connection_status (connection_status),
   CONSTRAINT fk_connection_project FOREIGN KEY (project_id) REFERENCES projects(id),
   CONSTRAINT fk_connection_user FOREIGN KEY (attached_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS module_pairing_receipts (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  request_id CHAR(36) NOT NULL UNIQUE,
+  module_uuid VARCHAR(190) NOT NULL,
+  pairing_token_hash CHAR(64) NOT NULL,
+  module_url VARCHAR(500) NOT NULL,
+  status ENUM('processing','validated','confirmed','failed') NOT NULL DEFAULT 'processing',
+  error_code VARCHAR(100) NULL,
+  received_at DATETIME NOT NULL,
+  validated_at DATETIME NULL,
+  confirmed_at DATETIME NULL,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_pairing_module_status (module_uuid,status),
+  CONSTRAINT fk_pairing_module FOREIGN KEY (module_uuid) REFERENCES project_connections(module_instance_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS module_access_issuances (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  module_uuid VARCHAR(190) NOT NULL,
+  jti_hash CHAR(64) NOT NULL UNIQUE,
+  issued_by_user_id BIGINT UNSIGNED NOT NULL,
+  issued_at DATETIME NOT NULL,
+  expires_at DATETIME NOT NULL,
+  INDEX idx_access_module_expiry (module_uuid,expires_at),
+  CONSTRAINT fk_access_module FOREIGN KEY (module_uuid) REFERENCES project_connections(module_instance_id),
+  CONSTRAINT fk_access_user FOREIGN KEY (issued_by_user_id) REFERENCES users(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS settings (

@@ -63,7 +63,9 @@ O catálogo de projetos relaciona módulos a clientes por `client_projects`. Con
 
 Senhas usam `password_hash()`/`password_verify()`. Toda mutação exige token CSRF. Consultas usam PDO com prepared statements, saídas são escapadas, o ID de sessão é regenerado no login e cookies usam HttpOnly, SameSite=Lax e Secure sob HTTPS. Há limitação de tentativas de login, proteção de diretórios e logs sem credenciais.
 
-Projetos podem ser anexados por uma chave de uso único. A Plataforma restringe a descoberta a HTTPS em `gda.app.br`, valida challenge e manifesto e registra a conexão sem persistir o segredo. Consulte [docs/MODULE-ATTACHMENT-PROTOCOL.md](docs/MODULE-ATTACHMENT-PROTOCOL.md).
+Projetos são anexados pela URL pública: a Plataforma consulta `GET /gda/module`, valida identidade, compatibilidade, health, HTTPS e SSRF e registra o UUID sem duplicidade. O pareamento permanente chega por `POST /modules/pairing`; o segredo temporário permanece apenas em memória e a credencial de máquina é armazenada criptografada. O protocolo anterior por chave permanece como fallback técnico. Consulte [docs/MODULE-ATTACHMENT-PROTOCOL.md](docs/MODULE-ATTACHMENT-PROTOCOL.md).
+
+Para integração oficial em produção, configure também `GDA_PLATFORM_UUID`, `GDA_PLATFORM_PUBLIC_URL`, `GDA_PLATFORM_INSTALLATION_ID` e `GDA_PLATFORM_PRIVATE_KEY`. A chave RSA privada deve existir somente no ambiente seguro do Coolify e nunca no Git ou em `.env` versionado. O módulo deve usar `GDA_API_URL=https://admin.gda.app.br`.
 
 ## Atualizações e backups
 

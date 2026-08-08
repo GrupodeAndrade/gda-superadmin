@@ -1,8 +1,10 @@
-# Anexar projeto no Super Administrador
+# Anexar módulo no Super Administrador
 
-Em **Projetos GDA → Anexar projeto**, o Super Administrador informa a URL pública HTTPS do módulo e a chave temporária fornecida pela Administração Global daquele módulo.
+Em **Projetos GDA → Anexar módulo**, o Super Administrador informa somente a URL pública HTTPS. A Plataforma descobre a identidade em `GET /gda/module` e registra ou atualiza o catálogo imediatamente.
 
-O fluxo possui duas etapas independentes:
+O fluxo anterior por chave permanece disponível internamente como fallback técnico, mas não faz parte da interface normal. A integração oficial segue descoberta, handoff servidor a servidor, validação, confirmação e acesso federado descritos em `MODULE-ATTACHMENT-PROTOCOL.md`.
+
+## Fallback legado por chave
 
 1. **Validar módulo** consulta `/gda/integration/attach`, valida a resposta e apresenta os dados reais sem escrever no banco.
 2. **Confirmar anexação** consulta `/gda/integration/attach/confirm`; somente depois do sucesso remoto registra o módulo em transação.
@@ -18,3 +20,7 @@ Tentativas falhas são limitadas por usuário e IP. A auditoria registra somente
 - `GDA_MODULE_ATTACH_TIMEOUT`: padrão `5`, entre 2 e 15 segundos;
 - `GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES`: padrão `262144`, entre 16 KiB e 1 MiB;
 - `GDA_MODULE_ALLOWED_DOMAIN`: padrão `gda.app.br`.
+- `GDA_PLATFORM_UUID`: UUID v4 estável do Super Admin;
+- `GDA_PLATFORM_PUBLIC_URL`: URL HTTPS usada pelo módulo no handoff;
+- `GDA_PLATFORM_INSTALLATION_ID`: identificador estável da instalação;
+- `GDA_PLATFORM_PRIVATE_KEY`: chave RSA privada fornecida somente pelo ambiente.

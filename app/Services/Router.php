@@ -7,13 +7,13 @@ final class Router
 {
     private array $routes = [];
 
-    public function get(string $path, callable|array $handler, bool $auth = true): void { $this->add('GET', $path, $handler, $auth); }
-    public function post(string $path, callable|array $handler, bool $auth = true): void { $this->add('POST', $path, $handler, $auth); }
+    public function get(string $path, callable|array $handler, bool $auth = true): void { $this->add('GET', $path, $handler, $auth, false); }
+    public function post(string $path, callable|array $handler, bool $auth = true, bool $csrf = true): void { $this->add('POST', $path, $handler, $auth, $csrf); }
 
-    private function add(string $method, string $path, callable|array $handler, bool $auth): void
+    private function add(string $method, string $path, callable|array $handler, bool $auth, bool $csrf): void
     {
         $pattern = preg_replace('#\{([a-zA-Z_][a-zA-Z0-9_]*)\}#', '(?P<$1>[0-9]+)', $path);
-        $this->routes[] = compact('method', 'path', 'pattern', 'handler', 'auth');
+        $this->routes[] = compact('method', 'path', 'pattern', 'handler', 'auth', 'csrf');
     }
 
     public function dispatch(): void
@@ -44,7 +44,7 @@ final class Router
                     return;
                 }
             }
-            if ($method !== 'GET' && !Csrf::verify($_POST['_token'] ?? null)) {
+            if ($method !== 'GET' && $route['csrf'] && !Csrf::verify($_POST['_token'] ?? null)) {
                 http_response_code(419);
                 View::render('errors/419', [], Auth::check() ? 'admin' : 'guest');
                 return;

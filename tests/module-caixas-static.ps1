@@ -20,7 +20,7 @@ foreach ($legacy in @('caixadiario.gda.app.br',"'Caixa Diário','caixa-diario'")
 foreach ($preservation in @('$projectId = (int) $legacy[''id'']','INSERT INTO client_projects','DELETE FROM client_projects','MIGRATION_ID','ON DUPLICATE KEY UPDATE')) {
   if (-not $files.migration.Contains($preservation)) { throw "Garantia de migração ausente: $preservation" }
 }
-if (-not $files.list.Contains('Administrar') -or -not $files.details.Contains('URL administrativa')) { throw 'Listagem ou detalhes incompletos.' }
+if (-not $files.list.Contains('Administrar') -or -not $files.details.Contains('API version') -or -not $files.details.Contains('Última comunicação')) { throw 'Listagem ou detalhes incompletos.' }
 if (-not $files.clients.Contains('project_status_label') -or -not $files.dashboard.Contains('Módulos GDA') -or -not $files.dashboard.Contains("`$module['name']")) { throw 'Dashboard dinâmico de módulos ausente.' }
 if (-not $files.router.Contains('Auth::isSuperAdmin()')) { throw 'Bloqueio de papéis não super_admin ausente.' }
 foreach ($breakpoint in @('@media(max-width:1000px)','@media(max-width:650px)')) { if (-not $files.css.Contains($breakpoint)) { throw "Responsividade ausente: $breakpoint" } }

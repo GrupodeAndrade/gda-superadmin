@@ -19,7 +19,4 @@ return [
 // GDA_MODULE_ATTACH_TIMEOUT=5
 // GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES=262144
 // GDA_MODULE_ALLOWED_DOMAIN=gda.app.br
-// GDA_PLATFORM_PUBLIC_URL=https://admin.gda.app.br
-// GDA_PLATFORM_UUID=UUID-v4-estável-da-plataforma
-// GDA_PLATFORM_INSTALLATION_ID=identificador-estável-da-instalação
-// GDA_PLATFORM_PRIVATE_KEY=chave-RSA-privada-em-PEM (somente ambiente; nunca versionar)
+// UUID, installation_id e chaves RSA são criados automaticamente e persistidos no banco.

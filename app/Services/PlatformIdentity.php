@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use PDO;
 use RuntimeException;
 
 final class PlatformIdentity
@@ -15,15 +16,23 @@ final class PlatformIdentity
         private readonly string $installationId = '',
     ) {}
 
-    public static function fromEnvironment(): self
+    public static function load(PDO $database, ?array $runtime = null): self
     {
-        $privateKey = str_replace('\\n', "\n", trim((string) (getenv('GDA_PLATFORM_PRIVATE_KEY') ?: '')));
+        $stored = (new PlatformIdentityStore($database))->loadOrCreate();
+        $runtime ??= RuntimeConfig::load();
+        $publicUrl = rtrim(trim((string) ($runtime['app_url'] ?? '')), '/');
+        if ($publicUrl === '') {
+            $statement = $database->prepare("SELECT setting_value FROM settings WHERE setting_key='app_url' LIMIT 1");
+            $statement->execute();
+            $publicUrl = rtrim(trim((string) ($statement->fetchColumn() ?: '')), '/');
+        }
+
         return new self(
-            trim((string) (getenv('GDA_PLATFORM_UUID') ?: '')),
-            rtrim(trim((string) (getenv('GDA_PLATFORM_PUBLIC_URL') ?: getenv('APP_URL') ?: '')), '/'),
-            $privateKey,
+            $stored['platform_uuid'],
+            $publicUrl,
+            $stored['private_key_pem'],
             '1.0',
-            trim((string) (getenv('GDA_PLATFORM_INSTALLATION_ID') ?: '')),
+            $stored['installation_id'],
         );
     }
 

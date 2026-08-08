@@ -9,6 +9,5 @@ return [
         'timeout' => max(2,min(15,(int)(getenv('GDA_MODULE_ATTACH_TIMEOUT')?:5))),
         'max_response_bytes' => max(16384,min(1048576,(int)(getenv('GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES')?:262144))),
         'allowed_domain' => getenv('GDA_MODULE_ALLOWED_DOMAIN')?:'gda.app.br',
-        'platform_public_url' => getenv('GDA_PLATFORM_PUBLIC_URL')?:'',
     ],
 ];

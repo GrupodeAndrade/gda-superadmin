@@ -65,7 +65,7 @@ Senhas usam `password_hash()`/`password_verify()`. Toda mutação exige token CS
 
 Projetos são anexados pela URL pública: a Plataforma consulta `GET /gda/module`, valida identidade, compatibilidade, health, HTTPS e SSRF e registra o UUID sem duplicidade. O pareamento permanente chega por `POST /modules/pairing`; o segredo temporário permanece apenas em memória e a credencial de máquina é armazenada criptografada. O protocolo anterior por chave permanece como fallback técnico. Consulte [docs/MODULE-ATTACHMENT-PROTOCOL.md](docs/MODULE-ATTACHMENT-PROTOCOL.md).
 
-Para integração oficial em produção, configure também `GDA_PLATFORM_UUID`, `GDA_PLATFORM_PUBLIC_URL`, `GDA_PLATFORM_INSTALLATION_ID` e `GDA_PLATFORM_PRIVATE_KEY`. A chave RSA privada deve existir somente no ambiente seguro do Coolify e nunca no Git ou em `.env` versionado. O módulo deve usar `GDA_API_URL=https://admin.gda.app.br`.
+Para integração oficial em produção, a identidade técnica é criada automaticamente na primeira inicialização e persistida no banco. Não é necessário gerar UUID ou chaves manualmente. A URL pública reutiliza `APP_URL`, `config/local.php` ou a configuração `app_url` salva pela aplicação. O módulo deve usar `GDA_API_URL=https://admin.gda.app.br`.
 
 ## Atualizações e backups
 

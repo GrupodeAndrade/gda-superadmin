@@ -20,7 +20,6 @@ Tentativas falhas são limitadas por usuário e IP. A auditoria registra somente
 - `GDA_MODULE_ATTACH_TIMEOUT`: padrão `5`, entre 2 e 15 segundos;
 - `GDA_MODULE_ATTACH_MAX_RESPONSE_BYTES`: padrão `262144`, entre 16 KiB e 1 MiB;
 - `GDA_MODULE_ALLOWED_DOMAIN`: padrão `gda.app.br`.
-- `GDA_PLATFORM_UUID`: UUID v4 estável do Super Admin;
-- `GDA_PLATFORM_PUBLIC_URL`: URL HTTPS usada pelo módulo no handoff;
-- `GDA_PLATFORM_INSTALLATION_ID`: identificador estável da instalação;
-- `GDA_PLATFORM_PRIVATE_KEY`: chave RSA privada fornecida somente pelo ambiente.
+- UUID v4, installation ID e par RSA são criados automaticamente e persistidos na tabela técnica `platform_identity`;
+- a URL HTTPS usada pelo módulo no handoff reutiliza `APP_URL`, `config/local.php` ou `settings.app_url`;
+- a chave privada permanece exclusivamente no backend e nunca é enviada à interface, logs ou APIs.

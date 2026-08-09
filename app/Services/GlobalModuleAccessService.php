@@ -12,13 +12,14 @@ final class GlobalModuleAccessService
     {
         $connection=$this->repository->connectionForProject($projectId);
         if(!$connection)throw new ModuleAttachmentException('module_not_attached','O módulo ainda não está anexado.');
-        $moduleUrl=rtrim((string)$connection['endpoint_url'],'/');$integrated=($connection['integration_status']??'')==='integrado'&&!empty($connection['machine_credential_encrypted']);
-        if($integrated){$credential=$this->identity->decrypt((string)$connection['machine_credential_encrypted']);$status=$this->client->get($moduleUrl.'/gda/integration/status',['Authorization'=>'Bearer '.$credential]);if(!hash_equals((string)$connection['module_instance_id'],(string)($status['module_uuid']??''))||($status['status']??'')!=='integrado')throw new ModuleAttachmentException('module_not_integrated','O vínculo do módulo não está ativo.');$this->repository->updateCommunication((string)$connection['module_instance_id'],'integrado');$signed=$this->identity->signGlobalAccess((string)$connection['module_instance_id']);}
-        else{$signed=$this->identity->signGlobalAccess((string)$connection['module_instance_id'],120,null,null,'initial_global_access');}
+        $moduleUrl=rtrim((string)$connection['endpoint_url'],'/');$integrated=($connection['integration_status']??'')==='integrado';
+        if(!$integrated)return['mode'=>'local','action'=>$moduleUrl.'/admin-gda'];
+        if(empty($connection['machine_credential_encrypted']))throw new ModuleAttachmentException('module_not_integrated','O vínculo do módulo não está ativo.');
+        $credential=$this->identity->decrypt((string)$connection['machine_credential_encrypted']);$status=$this->client->get($moduleUrl.'/gda/integration/status',['Authorization'=>'Bearer '.$credential]);if(!hash_equals((string)$connection['module_instance_id'],(string)($status['module_uuid']??''))||($status['status']??'')!=='integrado')throw new ModuleAttachmentException('module_not_integrated','O vínculo do módulo não está ativo.');$this->repository->updateCommunication((string)$connection['module_instance_id'],'integrado');$signed=$this->identity->signGlobalAccess((string)$connection['module_instance_id']);
         $claims=$signed['claims'];
         $this->db->prepare('INSERT INTO module_access_issuances(module_uuid,jti_hash,issued_by_user_id,issued_at,expires_at)VALUES(?,?,?,?,?)')->execute([$connection['module_instance_id'],hash('sha256',(string)$claims['jti']),$userId,date('Y-m-d H:i:s',(int)$claims['iat']),date('Y-m-d H:i:s',(int)$claims['exp'])]);
-        try{Logger::activity($integrated?'module.global_access_issued':'module.initial_global_access_issued',$integrated?'Acesso global federado emitido.':'Acesso global inicial emitido.','success',$userId,['module_uuid'=>$connection['module_instance_id'],'project_id'=>$projectId,'expires_at'=>$claims['exp']]);}catch(\Throwable){}
-        return ['action'=>$moduleUrl.'/admin-gda/auth/gda','access_token'=>$signed['token'],'expires_at'=>$claims['exp']];
+        try{Logger::activity('module.global_access_issued','Acesso global federado emitido.','success',$userId,['module_uuid'=>$connection['module_instance_id'],'project_id'=>$projectId,'expires_at'=>$claims['exp']]);}catch(\Throwable){}
+        return ['mode'=>'federated','action'=>$moduleUrl.'/admin-gda/auth/gda','access_token'=>$signed['token'],'expires_at'=>$claims['exp']];
     }
 
     public function consumeInitial(string $token):array

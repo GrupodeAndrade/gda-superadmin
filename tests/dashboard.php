@@ -56,7 +56,7 @@ try {
     }
 
     $project = $database->prepare('INSERT INTO projects(name,full_name,code,description,icon,version,status,display_order,deleted_at) VALUES(?,?,?,?,?,?,?,?,NULL)');
-    $project->execute(['Caixas','GDA Caixas','gda-caixas','Gerenciamento de caixas de diferentes modalidades.','wallet','1.0.0','deploying',1]);
+    $project->execute(['Agenda','GDA Agenda','gda-agenda','Gerenciamento de compromissos.','grid','1.0.0','deploying',1]);
     $project->execute(['Portal','GDA Portal','gda-portal','Portal em produção.','grid','2.0.0','active',2]);
     $project->execute(['Financeiro','GDA Financeiro','gda-financeiro','Módulo financeiro.','grid','1.5.0','production',3]);
     $project->execute(['Legado','GDA Legado','gda-legado','Módulo inativo.','grid','0.9.0','inactive',4]);
@@ -86,8 +86,8 @@ try {
     dashboardAssert($filled['stats']['production_projects'] === 2, 'Módulos em produção incorretos.');
     dashboardAssert($filled['stats']['deploying_projects'] === 1, 'Módulos em implantação incorretos.');
     dashboardAssert(count($filled['modules']) === 4 && (int) $filled['modules'][0]['client_count'] >= 0, 'Módulos em destaque incorretos.');
-    $caixas = array_values(array_filter($filled['modules'], fn(array $module): bool => $module['code'] === 'gda-caixas'))[0];
-    dashboardAssert((int) $caixas['client_count'] === 2, 'Clientes vinculados ao módulo incorretos.');
+    $agenda = array_values(array_filter($filled['modules'], fn(array $module): bool => $module['code'] === 'gda-agenda'))[0];
+    dashboardAssert((int) $agenda['client_count'] === 2, 'Clientes vinculados ao módulo incorretos.');
     dashboardAssert(count($filled['clients']) === 5 && $filled['clients'][0]['identifier'] === 'cliente-6', 'Últimos cinco clientes incorretos.');
     dashboardAssert((int) $filled['clients'][0]['project_count'] === 2, 'Módulos liberados por cliente incorretos.');
     dashboardAssert($filled['platform']['last_backup_at'] === strtotime('2026-08-04 12:30:00'), 'Último backup incorreto.');

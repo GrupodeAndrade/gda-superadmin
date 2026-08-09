@@ -70,13 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
             $stmt = $pdo->prepare('INSERT INTO users (name,email,password_hash,role,status) VALUES (?,?,?,"super_admin","active")');
             $stmt->execute([trim($_POST['admin_name']), mb_strtolower(trim($_POST['admin_email'])), password_hash($_POST['admin_password'], PASSWORD_DEFAULT)]);
-            $project = $pdo->prepare('INSERT INTO projects (name,full_name,code,description,icon,version,url,admin_url,category,status,display_order) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
-            $project->execute(['Caixas','GDA Caixas','gda-caixas','Gerenciamento de caixas diários, semanais, quinzenais, mensais e personalizados.','wallet','1.0.0','https://caixas.gda.app.br','https://caixas.gda.app.br/admin-gda','Gestão financeira','deploying',1]);
             $settings = [
                 'platform_name' => $platformName, 'app_url' => rtrim($appUrl, '/'),
                 'company_name' => 'Grupo DeAndrade', 'admin_email' => mb_strtolower(trim($_POST['admin_email'])),
-                'timezone' => 'America/Bahia', 'caixas_url' => 'https://caixas.gda.app.br',
-                'caixas_admin_url' => 'https://caixas.gda.app.br/admin-gda',
+                'timezone' => 'America/Bahia',
                 'max_update_mb' => '50', 'maintenance_mode' => '0', 'maintenance_message' => 'Sistema em manutenção. Tente novamente em instantes.',
                 'version' => '0.1.0',
             ];

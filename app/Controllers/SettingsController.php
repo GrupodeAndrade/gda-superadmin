@@ -9,8 +9,8 @@ final class SettingsController extends BaseController
     public function index(): void { $settings=$this->settings();$diagnostic=$this->diagnostic();$this->view('configuracoes/index',compact('settings','diagnostic')); }
     public function update(): void
     {
-        $allowed=['platform_name','app_url','company_name','admin_email','timezone','caixas_url','caixas_admin_url','max_update_mb','maintenance_mode','maintenance_message'];
-        if(!filter_var($_POST['app_url']??'',FILTER_VALIDATE_URL)||!filter_var($_POST['admin_email']??'',FILTER_VALIDATE_EMAIL)||!filter_var($_POST['caixas_url']??'',FILTER_VALIDATE_URL)||!filter_var($_POST['caixas_admin_url']??'',FILTER_VALIDATE_URL)){flash('error','Revise as URLs e o e-mail.');redirect('configuracoes');}
+        $allowed=['platform_name','app_url','company_name','admin_email','timezone','max_update_mb','maintenance_mode','maintenance_message'];
+        if(!filter_var($_POST['app_url']??'',FILTER_VALIDATE_URL)||!filter_var($_POST['admin_email']??'',FILTER_VALIDATE_EMAIL)){flash('error','Revise a URL e o e-mail.');redirect('configuracoes');}
         $stmt=$this->db->prepare('INSERT INTO settings (setting_key,setting_value,type) VALUES (?,?,"string") ON DUPLICATE KEY UPDATE setting_value=VALUES(setting_value)');
         foreach($allowed as $key)$stmt->execute([$key,(string)($_POST[$key]??'0')]);
         Logger::activity('settings_updated','Configurações gerais alteradas.');flash('success','Configurações salvas com sucesso.');redirect('configuracoes');

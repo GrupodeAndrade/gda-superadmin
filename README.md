@@ -55,9 +55,9 @@ O `.htaccess` mantém `/public` fora da URL e bloqueia acesso web a código, con
 
 ## Banco e dados iniciais
 
-O instalador executa `database/schema.sql`, cria o Super Administrador, as configurações iniciais e o módulo **Caixas** (`gda-caixas`) em estado de implantação. Não cria clientes fictícios. Tabelas: `users`, `clients`, `projects`, `client_projects`, `settings`, `activity_logs`, `system_updates`, `migrations` e `login_attempts`.
+O instalador executa `database/schema.sql`, cria o Super Administrador e as configurações iniciais. Não cria clientes ou projetos fictícios. Tabelas: `users`, `clients`, `projects`, `client_projects`, `settings`, `activity_logs`, `system_updates`, `migrations` e `login_attempts`.
 
-O catálogo de projetos relaciona módulos a clientes por `client_projects`. Consulte [docs/MODULE-CAIXAS.md](docs/MODULE-CAIXAS.md) para o cadastro oficial e as URLs administrativas, e [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para a arquitetura.
+O catálogo de projetos relaciona módulos cadastrados localmente a clientes por `client_projects`. Consulte [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para a arquitetura.
 
 ## Segurança
 
@@ -68,8 +68,6 @@ Senhas usam `password_hash()`/`password_verify()`. Toda mutação exige token CS
 O upload aceita ZIP dentro do limite configurado. Primeiro ocorre a análise; instalar exige confirmação e senha atual. O ZIP precisa conter `update.json` e `payload/`. Caminhos absolutos, `..`, links simbólicos e alterações em `config/local.php`, backups, logs ou pacotes armazenados são rejeitados.
 
 Durante a instalação é criado `storage/updates/update.lock` e o modo manutenção. Se solicitado, o backup ZIP inclui arquivos atuais, dump SQL gerado por PDO e manifesto. Outros backups e arquivos temporários não são incluídos. O SHA-256 calculado na análise é comparado antes da instalação e o ZIP é reaberto e revalidado. Em falha, arquivos substituídos e `version.json` são restaurados, arquivos novos são removidos e diretórios novos vazios são limpos. Se o rollback não puder ser confirmado, manutenção e trava permanecem ativas. O mecanismo v0.1.0 aceita o campo `migrations`, mas a execução automatizada de SQL de pacotes permanece desabilitada por segurança até existir um formato declarativo com lista fechada de operações.
-
-Na versão 1.0.0, a migração idempotente do projeto Caixas é distribuída como código da própria plataforma. Após a atualização, a primeira requisição executa a convergência estrutural e de dados, preservando os vínculos em `client_projects`.
 
 Exemplo de manifesto:
 
@@ -100,6 +98,6 @@ Para gerar a próxima atualização, copie somente os arquivos alterados para `p
 ## Limitações conhecidas da v1.0.0
 
 - Não há exclusão definitiva de clientes.
-- Não há SSO, provisionamento ou integração interna com o módulo Caixas nesta fase.
+- Não há integração automática entre projetos cadastrados no catálogo.
 - Não há financeiro, planos ou cobrança.
 - Migrações de pacotes são registráveis no schema, porém sua execução automática está deliberadamente desabilitada até a definição de um DSL seguro.

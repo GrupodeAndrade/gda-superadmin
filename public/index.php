@@ -27,8 +27,6 @@ if (is_file(dirname(__DIR__) . '/storage/maintenance.lock')) {
     }
 }
 
-App\Services\ModuleMigrationService::run();
-
 $router = new App\Services\Router();
 require dirname(__DIR__) . '/routes/web.php';
 $router->dispatch();

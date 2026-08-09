@@ -57,12 +57,8 @@ final class ClientController extends BaseController
         $client=$this->find('clients',(int)$id);
         $this->db->beginTransaction();
         try {
-            if(!$this->deleteClientIfUnreferenced((int)$id)) {
-                $this->db->rollBack();
-                flash('error','Este cliente possui usuários, projetos ou outros vínculos e precisa ser desvinculado antes da exclusão.');
-                redirect("clientes/$id");
-            }
-            Logger::activity('client_deleted',"Cliente {$client['name']} excluído.",'success',null,['client_id'=>(int)$id,'identifier'=>$client['identifier']]);
+            $removed=$this->deleteClientData((int)$id);
+            Logger::activity('client_deleted',"Cliente {$client['name']} excluído.",'success',null,['client_id'=>(int)$id,'client_name'=>$client['name'],'identifier'=>$client['identifier'],'removed'=>$removed]);
             $this->db->commit();
             flash('success','Cliente excluído com sucesso.');
             redirect('clientes');
@@ -92,16 +88,36 @@ final class ClientController extends BaseController
         }
         throw new \RuntimeException('Não foi possível gerar um identificador único.');
     }
-    private function deleteClientIfUnreferenced(int $id): bool
+    private function deleteClientData(int $id): array
     {
-        foreach(['client_projects','users'] as $table) {
-            $statement=$this->db->prepare("SELECT COUNT(*) FROM {$table} WHERE client_id=?");
+        $removed=['module_access_issuances'=>0,'client_projects'=>0,'users'=>0];
+        if($this->tableExists('module_access_issuances')) {
+            $statement=$this->db->prepare("DELETE FROM module_access_issuances WHERE issued_by_user_id IN (SELECT id FROM users WHERE client_id=? AND role<>'super_admin')");
             $statement->execute([$id]);
-            if((int)$statement->fetchColumn()>0)return false;
+            $removed['module_access_issuances']=$statement->rowCount();
         }
-        $statement=$this->db->prepare('DELETE FROM clients WHERE id=? AND NOT EXISTS (SELECT 1 FROM client_projects WHERE client_id=?) AND NOT EXISTS (SELECT 1 FROM users WHERE client_id=?)');
-        $statement->execute([$id,$id,$id]);
-        return $statement->rowCount()===1;
+        $statement=$this->db->prepare('DELETE FROM client_projects WHERE client_id=?');
+        $statement->execute([$id]);
+        $removed['client_projects']=$statement->rowCount();
+        $statement=$this->db->prepare("UPDATE users SET client_id=NULL WHERE client_id=? AND role='super_admin'");
+        $statement->execute([$id]);
+        $statement=$this->db->prepare("DELETE FROM users WHERE client_id=? AND role<>'super_admin'");
+        $statement->execute([$id]);
+        $removed['users']=$statement->rowCount();
+        $statement=$this->db->prepare('DELETE FROM clients WHERE id=?');
+        $statement->execute([$id]);
+        if($statement->rowCount()!==1)throw new \RuntimeException('O cliente não foi removido exatamente uma vez.');
+        return $removed;
+    }
+    private function tableExists(string $table): bool
+    {
+        if($this->db->getAttribute(\PDO::ATTR_DRIVER_NAME)==='sqlite') {
+            $statement=$this->db->prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?");
+        } else {
+            $statement=$this->db->prepare('SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name=?');
+        }
+        $statement->execute([$table]);
+        return (int)$statement->fetchColumn()===1;
     }
     private function syncProjects(int $clientId,array $ids): void
     {

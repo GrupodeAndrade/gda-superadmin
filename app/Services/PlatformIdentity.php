@@ -69,18 +69,26 @@ final class PlatformIdentity
         return $plain;
     }
 
-    public function signGlobalAccess(string $moduleUuid, int $lifetime = 240, ?int $now = null, ?string $jti = null): array
+    public function signGlobalAccess(string $moduleUuid, int $lifetime = 240, ?int $now = null, ?string $jti = null, string $purpose = 'federated_global_access'): array
     {
         $this->assertConfigured();
         if (!$this->validUuid($moduleUuid)) throw new RuntimeException('UUID do módulo inválido.');
         $now ??= time();
         $lifetime = max(30, min(300, $lifetime));
-        $claims = ['iss'=>$this->uuid,'aud'=>$moduleUuid,'role'=>'global_admin','jti'=>$jti ?: bin2hex(random_bytes(24)),'iat'=>$now,'exp'=>$now+$lifetime];
+        $claims = ['iss'=>$this->uuid,'aud'=>$moduleUuid,'role'=>'global_admin','purpose'=>$purpose,'jti'=>$jti ?: bin2hex(random_bytes(24)),'iat'=>$now,'exp'=>$now+$lifetime];
         $encode = static fn(string $value): string => rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
         $header = $encode(json_encode(['alg'=>'RS256','typ'=>'JWT'], JSON_THROW_ON_ERROR));
         $payload = $encode(json_encode($claims, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
         if (!openssl_sign($header.'.'.$payload, $signature, $this->privateKey, OPENSSL_ALGO_SHA256)) throw new RuntimeException('Falha ao assinar autorização.');
         return ['token'=>$header.'.'.$payload.'.'.$encode($signature),'claims'=>$claims];
+    }
+
+    public function verifyGlobalAccess(string $token): array
+    {
+        $parts=explode('.',$token);if(count($parts)!==3)throw new RuntimeException('Autorização inválida.');
+        [$header,$payload,$signature]=$parts;$decode=static function(string$value):string{$padding=(4-strlen($value)%4)%4;$decoded=base64_decode(strtr($value,'-_','+/').str_repeat('=',$padding),true);if($decoded===false)throw new RuntimeException('Autorização inválida.');return$decoded;};
+        $metadata=json_decode($decode($header),true);$claims=json_decode($decode($payload),true);if(!is_array($metadata)||!is_array($claims)||($metadata['alg']??null)!=='RS256'||openssl_verify($header.'.'.$payload,$decode($signature),$this->publicKey(),OPENSSL_ALGO_SHA256)!==1)throw new RuntimeException('Autorização inválida.');
+        return $claims;
     }
 
     private function validUuid(string $value): bool

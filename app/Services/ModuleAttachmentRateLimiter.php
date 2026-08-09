@@ -1,4 +1,0 @@
-<?php
-declare(strict_types=1);
-namespace App\Services;
-final class ModuleAttachmentRateLimiter { public function __construct(private readonly int $limit=5,private readonly int $windowSeconds=300){} public function assertAllowed(int $userId,string $ip):void{$key=hash('sha256',$userId.'|'.substr($ip,0,45));$now=time();$attempts=array_values(array_filter($_SESSION['_module_attach_attempts'][$key]??[],fn(int $at):bool=>$at>$now-$this->windowSeconds));$_SESSION['_module_attach_attempts'][$key]=$attempts;if(count($attempts)>=$this->limit)throw new ModuleAttachmentException('rate_limited','Não foi possível validar a chave agora. Aguarde alguns minutos.');}public function recordFailure(int $userId,string $ip):void{$key=hash('sha256',$userId.'|'.substr($ip,0,45));$_SESSION['_module_attach_attempts'][$key][]=time();}public function clear(int $userId,string $ip):void{unset($_SESSION['_module_attach_attempts'][hash('sha256',$userId.'|'.substr($ip,0,45))]);} }

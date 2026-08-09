@@ -10,8 +10,6 @@ Primeira atualização oficial da GDA Plataforma.
 - Dashboard, Clientes e Configurações passam a apresentar os dados do Caixas.
 - Instalações novas já recebem o cadastro oficial do projeto.
 - O Dashboard apresenta indicadores agrupados, módulos dinâmicos, situação do sistema e atividades recentes.
-- Projetos podem ser anexados por chave oficial, com validação de endpoint, challenge e manifesto.
-- Conexões são registradas em `project_connections` sem persistir a chave de anexação.
 
 ## Migração
 

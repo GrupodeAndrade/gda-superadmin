@@ -28,10 +28,6 @@ if (is_file(dirname(__DIR__) . '/storage/maintenance.lock')) {
 }
 
 App\Services\ModuleMigrationService::run();
-App\Services\ProjectConnectionMigrationService::run();
-App\Services\ModuleAttachmentProtocolMigrationService::run();
-App\Services\SimplifiedModuleIntegrationMigrationService::run();
-App\Services\PlatformIdentityMigrationService::run();
 
 $router = new App\Services\Router();
 require dirname(__DIR__) . '/routes/web.php';

@@ -3,9 +3,7 @@
 ## v1.0.0 — Primeira atualização oficial
 
 - refinada a visão geral do Dashboard com indicadores agrupados, módulos dinâmicos, saúde do sistema e atividades recentes;
-- adicionada a base segura para anexar projetos por chave, com challenge, manifesto validado e proteção contra SSRF;
-- criada a tabela idempotente `project_connections` sem armazenamento da chave ou token secreto;
-- preservados o ID do Caixas e todos os vínculos existentes em `client_projects` durante anexação e migração;
+- preservados o ID do Caixas e todos os vínculos existentes em `client_projects` durante a migração;
 
 - substituído o cadastro legado Caixa Diário pelo projeto Caixas;
 - preservados IDs e vínculos existentes em client_projects;

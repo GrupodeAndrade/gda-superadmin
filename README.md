@@ -57,15 +57,11 @@ O `.htaccess` mantém `/public` fora da URL e bloqueia acesso web a código, con
 
 O instalador executa `database/schema.sql`, cria o Super Administrador, as configurações iniciais e o módulo **Caixas** (`gda-caixas`) em estado de implantação. Não cria clientes fictícios. Tabelas: `users`, `clients`, `projects`, `client_projects`, `settings`, `activity_logs`, `system_updates`, `migrations` e `login_attempts`.
 
-O catálogo de projetos relaciona módulos a clientes por `client_projects`. Consulte [docs/MODULE-CAIXAS.md](docs/MODULE-CAIXAS.md) para o cadastro oficial, URLs e limites da integração desta fase, e [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para a arquitetura.
+O catálogo de projetos relaciona módulos a clientes por `client_projects`. Consulte [docs/MODULE-CAIXAS.md](docs/MODULE-CAIXAS.md) para o cadastro oficial e as URLs administrativas, e [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) para a arquitetura.
 
 ## Segurança
 
 Senhas usam `password_hash()`/`password_verify()`. Toda mutação exige token CSRF. Consultas usam PDO com prepared statements, saídas são escapadas, o ID de sessão é regenerado no login e cookies usam HttpOnly, SameSite=Lax e Secure sob HTTPS. Há limitação de tentativas de login, proteção de diretórios e logs sem credenciais.
-
-Projetos são anexados pela URL pública: a Plataforma consulta `GET /gda/module`, valida identidade, compatibilidade, health, HTTPS e SSRF e registra o UUID sem duplicidade. O pareamento permanente chega por `POST /modules/pairing`; o segredo temporário permanece apenas em memória e a credencial de máquina é armazenada criptografada. O protocolo anterior por chave permanece como fallback técnico. Consulte [docs/MODULE-ATTACHMENT-PROTOCOL.md](docs/MODULE-ATTACHMENT-PROTOCOL.md).
-
-Para integração oficial em produção, a identidade técnica é criada automaticamente na primeira inicialização e persistida no banco. Não é necessário gerar UUID ou chaves manualmente. A URL pública reutiliza `APP_URL`, `config/local.php` ou a configuração `app_url` salva pela aplicação. O módulo deve usar `GDA_API_URL=https://admin.gda.app.br`.
 
 ## Atualizações e backups
 

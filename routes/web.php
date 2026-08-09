@@ -19,6 +19,7 @@ $router->get('/clientes/{id}',[ClientController::class,'show']);
 $router->get('/clientes/{id}/editar',[ClientController::class,'edit']);
 $router->post('/clientes/{id}',[ClientController::class,'update']);
 $router->post('/clientes/{id}/status',[ClientController::class,'toggle']);
+$router->post('/clientes/{id}/excluir',[ClientController::class,'destroy']);
 $router->get('/clientes/{id}/projetos',[ClientController::class,'projects']);
 $router->get('/projetos',[ProjectController::class,'index']);
 $router->get('/projetos/{id}',[ProjectController::class,'show']);

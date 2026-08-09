@@ -2,7 +2,7 @@
 <section class="page-head"><div><h1><?= e($title) ?></h1><p><?= $editing?'Atualize os dados e acessos do cliente.':'Crie a conta administrativa principal do cliente.' ?></p></div></section>
 <form class="panel form-grid" method="post" action="<?= e(base_url($editing?'clientes/'.$client['id']:'clientes')) ?>" data-loading><?= csrf_field() ?>
 <label>Nome da empresa ou cliente *<input name="name" value="<?= old('name',$client['name']??'') ?>" required></label>
-<?php if(!$editing): ?><label>Identificador *<input name="identifier" value="<?= old('identifier') ?>" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" placeholder="empresa-exemplo" required></label><?php else: ?><label>Identificador<input value="<?= e($client['identifier']) ?>" disabled></label><?php endif; ?>
+<?php if($editing): ?><label>Identificador<input value="<?= e($client['identifier']) ?>" disabled></label><?php endif; ?>
 <label>Nome da pessoa administradora *<input name="administrator_name" value="<?= old('administrator_name',$client['administrator_name']??'') ?>" required></label>
 <label>E-mail de acesso *<input type="email" name="email" value="<?= old('email',$client['email']??'') ?>" required></label>
 <label>Telefone<input name="phone" data-phone value="<?= old('phone',$client['phone']??'') ?>" placeholder="(00) 00000-0000"></label>

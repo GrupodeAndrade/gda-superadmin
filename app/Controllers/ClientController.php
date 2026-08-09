@@ -24,8 +24,9 @@ final class ClientController extends BaseController
         $data=$this->validate(true); if ($data['errors']) { $_SESSION['_old']=$_POST; foreach($data['errors'] as $e) flash('error',$e); redirect('clientes/novo'); }
         $this->db->beginTransaction();
         try {
+            $identifier=$this->generateIdentifier();
             $stmt=$this->db->prepare('INSERT INTO clients (identifier,name,administrator_name,email,phone,status,notes) VALUES (?,?,?,?,?,?,?)');
-            $stmt->execute([$data['identifier'],$data['name'],$data['administrator_name'],$data['email'],$data['phone'],$data['status'],$data['notes']]); $id=(int)$this->db->lastInsertId();
+            $stmt->execute([$identifier,$data['name'],$data['administrator_name'],$data['email'],$data['phone'],$data['status'],$data['notes']]); $id=(int)$this->db->lastInsertId();
             $this->db->prepare('INSERT INTO users (client_id,name,email,password_hash,role,status) VALUES (?,?,?,?,\'client_admin\',?)')->execute([$id,$data['administrator_name'],$data['email'],password_hash($_POST['password'],PASSWORD_DEFAULT),$data['status']]);
             $this->syncProjects($id,$_POST['projects']??[]);
             $this->db->commit(); Logger::activity('client_created',"Cliente {$data['name']} cadastrado.",'success',null,['client_id'=>$id]); flash('success','Cliente salvo com sucesso.'); redirect("clientes/$id");
@@ -51,16 +52,56 @@ final class ClientController extends BaseController
         $this->db->prepare('UPDATE clients SET status=? WHERE id=?')->execute([$new,$id]); $this->db->prepare("UPDATE users SET status=? WHERE client_id=?")->execute([$new,$id]);
         Logger::activity('client_status',"Cliente {$client['name']} " . ($new==='active'?'ativado':'inativado') . '.'); flash('success','Status do cliente atualizado.'); redirect('clientes');
     }
+    public function destroy(string $id): void
+    {
+        $client=$this->find('clients',(int)$id);
+        $this->db->beginTransaction();
+        try {
+            if(!$this->deleteClientIfUnreferenced((int)$id)) {
+                $this->db->rollBack();
+                flash('error','Este cliente possui usuários, projetos ou outros vínculos e precisa ser desvinculado antes da exclusão.');
+                redirect("clientes/$id");
+            }
+            Logger::activity('client_deleted',"Cliente {$client['name']} excluído.",'success',null,['client_id'=>(int)$id,'identifier'=>$client['identifier']]);
+            $this->db->commit();
+            flash('success','Cliente excluído com sucesso.');
+            redirect('clientes');
+        } catch (\Throwable $e) {
+            if($this->db->inTransaction())$this->db->rollBack();
+            flash('error','Não foi possível excluir o cliente porque existem vínculos ou registros relacionados.');
+            redirect("clientes/$id");
+        }
+    }
     public function projects(string $id): void { $this->edit($id); }
     private function validate(bool $creating, ?int $id=null): array
     {
-        $name=$this->input('name'); $identifier=$creating?$this->input('identifier'):''; $administrator_name=$this->input('administrator_name'); $email=mb_strtolower($this->input('email')); $phone=$this->input('phone'); $status=$this->input('status'); $notes=$this->input('notes'); $errors=[];
+        $name=$this->input('name'); $administrator_name=$this->input('administrator_name'); $email=mb_strtolower($this->input('email')); $phone=$this->input('phone'); $status=$this->input('status'); $notes=$this->input('notes'); $errors=[];
         if($name===''||$administrator_name==='')$errors[]='Nome do cliente e pessoa administradora são obrigatórios.';
         if(!filter_var($email,FILTER_VALIDATE_EMAIL))$errors[]='Informe um e-mail válido.';
-        if($creating&&!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/',$identifier))$errors[]='O identificador aceita apenas letras minúsculas, números e hífen.';
         if(!in_array($status,['active','inactive'],true))$errors[]='Status inválido.';
         if($creating&&(strlen($_POST['password']??'')<8||($_POST['password']??'')!==($_POST['password_confirmation']??'')))$errors[]='A senha provisória deve ter 8 caracteres e confirmação igual.';
-        return compact('name','identifier','administrator_name','email','phone','status','notes','errors');
+        return compact('name','administrator_name','email','phone','status','notes','errors');
+    }
+    private function generateIdentifier(): string
+    {
+        $exists=$this->db->prepare('SELECT 1 FROM clients WHERE identifier=? LIMIT 1');
+        for($attempt=0;$attempt<10;$attempt++) {
+            $identifier='cliente-'.bin2hex(random_bytes(16));
+            $exists->execute([$identifier]);
+            if(!$exists->fetchColumn())return $identifier;
+        }
+        throw new \RuntimeException('Não foi possível gerar um identificador único.');
+    }
+    private function deleteClientIfUnreferenced(int $id): bool
+    {
+        foreach(['client_projects','users'] as $table) {
+            $statement=$this->db->prepare("SELECT COUNT(*) FROM {$table} WHERE client_id=?");
+            $statement->execute([$id]);
+            if((int)$statement->fetchColumn()>0)return false;
+        }
+        $statement=$this->db->prepare('DELETE FROM clients WHERE id=? AND NOT EXISTS (SELECT 1 FROM client_projects WHERE client_id=?) AND NOT EXISTS (SELECT 1 FROM users WHERE client_id=?)');
+        $statement->execute([$id,$id,$id]);
+        return $statement->rowCount()===1;
     }
     private function syncProjects(int $clientId,array $ids): void
     {
